@@ -1,0 +1,48 @@
+{
+	"name": "jazzcash-docs",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"build": "next build",
+		"dev": "next dev",
+		"start": "next start",
+		"check": "next typegen && tsc --noEmit && oxlint && oxfmt --write",
+		"types": "next typegen && tsc --noEmit",
+		"lint": "oxlint",
+		"format": "oxfmt --write"
+	},
+	"dependencies": {
+		"@ai-sdk/react": "^4.0.109",
+		"@openrouter/ai-sdk-provider": "^3.0.0",
+		"ai": "^7.0.106",
+		"class-variance-authority": "^0.7.1",
+		"cn": "^0.4.0",
+		"flexsearch": "^0.8.212",
+		"fumadocs-core": "16.15.14",
+		"fumadocs-mdx": "15.4.5",
+		"fumadocs-ui": "npm:@fumadocs/base-ui@16.15.14",
+		"hast-util-to-jsx-runtime": "^2.3.6",
+		"lucide-react": "^1.47.0",
+		"next": "16.3.5",
+		"react": "^19.3.0",
+		"react-dom": "^19.3.0",
+		"remark": "^15.0.1",
+		"remark-gfm": "^4.0.1",
+		"remark-rehype": "^11.1.2",
+		"unist-util-visit": "^5.1.0",
+		"zod": "^4.6.5"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "^4.3.3",
+		"@types/hast": "^3.0.5",
+		"@types/mdx": "^2.0.14",
+		"@types/node": "^26.6.1",
+		"@types/react": "^19.3.0",
+		"@types/react-dom": "^19.3.0",
+		"oxfmt": "^0.70.0",
+		"oxlint": "^1.85.0",
+		"postcss": "^8.5.28",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^7.0.2"
+	}
+}
