@@ -1,0 +1,16 @@
+---
+title: IPN Web Hook
+description: Real-time Instant Payment Notification (IPN) server-to-server webhook callbacks for transaction updates.
+---
+
+To entertain the merchant with the useful features, JazzCash provides the merchant a way to be notified if it's payment is marked successful. To integrate with it, merchant will be required to expose a transaction status update SOAP web service for Payment Gateway to update status of transactions which are not executed instantaneously.
+
+There is a possibility that at the time of voucher transaction creation, the transaction is not executed right away but requires certain procedure to actually process. This is a common scenario for voucher based transactions. In such cases, when Payment Gateway generates the voucher, customer has to visit the JazzCash outlet for the payment of voucher, Payment Gateway will in turn call the merchant Status update SOAP web service to update the status at merchant's end against the voucher number.
+
+Instant payment notifications can be send in real time or scheduled to be send from windows service depending upon the configuration of merchant.
+
+If real time IPN is enable for merchant then IPN will send in real time to the SOAP webservice of merchant. If JazzCash received failure response in real time IPN then IPN will be schedule to send from windows service.
+
+In windows service, JazzCash will send instant payment notifications to the SOAP webservice of merchant. If failure response received from merchant then it will retry 3 times with some delay between each try.
+
+Merchant have to send string response in specific format i.e. 3 digits ResponseCode concate with 200 letters ResponseMessage with Hash of response code and message if hashing is enable for merchant. For successfull response, merchant have to send '000' as response code.

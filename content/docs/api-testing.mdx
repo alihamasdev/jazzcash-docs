@@ -1,0 +1,32 @@
+---
+title: API Testing
+description: Test and validate JazzCash payment API payloads and responses in the sandbox environment.
+---
+
+![API Testing](/api-testing.png)
+
+For API testing, merchant will follow the following steps:
+
+1. Merchant will select from list of available options as given below:
+
+- `Mobile Account`
+- `Voucher Payments`
+- `Card (VISA/Mastercard)`
+  - Pay
+  - Authorize
+  - Capture
+  - Refund
+  - Void
+- `Status Inquiry`
+  - Transaction Status Inquiry
+  - Transaction Status Update
+
+2. An `API URL` will be visible to the merchant using which the merchant can also invoke the API from other channels.
+
+3. In the Random Request Parameters box, the following information needs to be provided by the merchant:
+
+- `Transaction Reference Number`
+- `Amount`
+- `Mobile Number`
+
+4. JSON Payload will be updated according to the given information. Once the merchant hits `run` button, the API will give its response.

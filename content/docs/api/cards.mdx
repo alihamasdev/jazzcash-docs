@@ -1,0 +1,811 @@
+---
+title: Cards
+description: API reference for credit and debit card payments, 3DS authentication, direct pay, authorize, and capture.
+---
+
+Following card based API's are available with detailed description and relevant information.
+
+## Initiate Authentication
+
+This is a request to check a cardholder's enrollment in the initiate authentication scheme.
+
+### Request Body
+
+```json
+{
+	"pp_Version": "2.0",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "Yes",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20221125153218",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_TxnCurrency": "PKR",
+	"pp_TxnDateTime": "20221125153215",
+	"pp_TxnExpiryDateTime": "20221202153215",
+	"pp_BillReference": "billRef",
+	"pp_Description": "Description of transaction",
+	"pp_CustomerCardNumber": "5123456789012346",
+	"pp_UsageMode": "API",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter                       | Description                                                                                                                                                                                                                                                          |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_Version"`                  | API Version. Fixed value `"1.1"` or `"2.0"` should be used.                                                                                                                                                                                                          |
+| `"pp_IsRegisteredCustomer"`     | This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.                                                                                                                 |
+| `"pp_ShouldTokenizeCardNumber"` | This parameter can be accessible from 2.0 version. It will generate token against the given card details.                                                                                                                                                            |
+| `"pp_TxnType"`                  | Presents the transaction type: `"MPAY"` (Direct Pay Mode) or `"AUTH"` (Authorize/Capture Mode)                                                                                                                                                                       |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                  |
+| `"pp_MerchantID"`               | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                          |
+| `"pp_Password"`                 | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                     |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                             |
+| `"pp_TxnCurrency"`              | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                        |
+| `"pp_TxnDateTime"`              | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                                                                                                                                                    |
+| `"pp_TxnExpiryDateTime"`        | Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.                                                 |
+| `"pp_BillReference"`            | Bill/invoice Number being settled.                                                                                                                                                                                                                                   |
+| `"pp_Description"`              | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'\|"{} are inserted, they will be replaced with a space. |
+| `"pp_CustomerCardNumber"`       | Card number of the customer making the payment.                                                                                                                                                                                                                      |
+| `"pp_UsageMode"`                | Represent the usage mode that is API:Initiate Authentication From API PR:Initiate Authentication From PR (Page Redirection Or Landing Page)                                                                                                                          |
+| `"pp_SecureHash"`               | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                 |
+
+### Response Body
+
+```json
+{
+responseCode": "000",
+responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
+status": "SUCCESS",
+gatewayRecommendation": "PROCEED",
+html":
+<div id=\"threedsFrictionLessRedirect\" xmlns=\"http://www.w3.org/1999/html\">
+   <iframe id=\"challengeFrame\" name=\"challengeFrame\">
+   </iframe>
+   <form id=\"threedsFrictionLessRedirectForm\"
+         method=\"POST\" action=\"http://localhost/MerchantSimulator/merchant/testview\"
+         target=\"challengeFrame\">
+       <input type=\"hidden\"
+              name=\"order.id\" value=\"RAFAYKHAN7T20221127183304\" />
+       <input type=\"hidden\"
+              name=\"transaction.id\" value=\"221127664007\" />
+       <input type=\"hidden\"
+              name=\"response.gatewayRecommendation\" value=\"PROCEED\" />
+       <input type=\"hidden\"
+              name=\"result\" value=\"SUCCESS\" />
+   </form>
+   <script id=\"authenticate-payer-script\">
+       var e = document.getElementById(\"threedsFrictionLessRedirectForm\");
+        if (e)
+       {
+         e.submit();
+            if (e.parentNode !== null)
+            {
+                e.parentNode.removeChild(e);
+            }
+       }
+    </script>
+</div>",
+"secureHash": ""
+}
+```
+
+| Parameter                 | Description                                                                          |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `"responseCode"`          | Success / Failure Response code.                                                     |
+| `"responseMessage"`       | Response message receive in case of success and failure.                             |
+| `"authenticationStatus"`  | If user is egligible for authentication or not.                                      |
+| `"status"`                | Status receive in case of success and failure.                                       |
+| `"gatewayRecommendation"` | Gateway Recommedation represent if customer can proceed or not.                      |
+| `"secureHash"`            | Used to allow the Payment Gateway to check the integrity of the transaction request. |
+
+## Initiate Authentication Via Token
+
+This is a request to check a cardholder's enrollment in the Initiate Authentication scheme using Token against their already saved card.This request is specific for returning customer transaction.
+
+### Request Body
+
+```json
+{
+	"pp_Version": "2.0",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "Yes",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20221125153224",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_TxnCurrency": "PKR",
+	"pp_TxnDateTime": "20221125153215",
+	"pp_TxnExpiryDateTime": "20221202153215",
+	"pp_BillReference": "billRef",
+	"pp_Description": "Description of transaction",
+	"pp_TokenizedCardNumber": "9228924639592086",
+	"pp_UsageMode": "API",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter                       | Description                                                                                                                                                                                                                                                          |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_Version"`                  | API Version. Fixed value `"1.1"` or `"2.0"` should be used.                                                                                                                                                                                                          |
+| `"pp_IsRegisteredCustomer"`     | This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.                                                                                                                 |
+| `"pp_ShouldTokenizeCardNumber"` | This parameter can be accessible from 2.0 version. It will generate token against the given card details.                                                                                                                                                            |
+| `"pp_TxnType"`                  | Presents the transaction type: `"MPAY"` (Direct Pay Mode) or `"AUTH"` (Authorize/Capture Mode)                                                                                                                                                                       |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                  |
+| `"pp_MerchantID"`               | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                          |
+| `"pp_Password"`                 | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                     |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                             |
+| `"pp_TxnCurrency"`              | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                        |
+| `"pp_TxnDateTime"`              | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                                                                                                                                                    |
+| `"pp_TxnExpiryDateTime"`        | Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.                                                 |
+| `"pp_BillReference"`            | Bill/invoice Number being settled.                                                                                                                                                                                                                                   |
+| `"pp_Description"`              | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'\|"{} are inserted, they will be replaced with a space. |
+| `"pp_TokenizedCardNumber"`      | It represents the token for returning customer against their already saved card.                                                                                                                                                                                     |
+| `"pp_UsageMode"`                | Represent the usage mode that is API:Initiate Authentication With Token From API PR:Initiate Authentication With Token From PR (Page Redirection Or Landing Page)                                                                                                    |
+| `"pp_SecureHash"`               | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                 |
+
+### Response Body
+
+```json
+{
+	"responseCode": "000",
+	"responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+	"authenticationStatus": "AUTHENTICATION_AVAILABLE",
+	"status": "SUCCESS",
+	"gatewayRecommendation": "PROCEED",
+	"secureHash": ""
+}
+```
+
+| Parameter                 | Description                                                                          |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `"responseCode"`          | Success / Failure Response code.                                                     |
+| `"responseMessage"`       | Response message receive in case of success and failure.                             |
+| `"authenticationStatus"`  | If user is egligible for authentication or not.                                      |
+| `"status"`                | Status receive in case of success and failure.                                       |
+| `"gatewayRecommendation"` | Gateway Recommedation represent if customer can proceed or not.                      |
+| `"secureHash"`            | Used to allow the Payment Gateway to check the integrity of the transaction request. |
+
+## Authenticate Payer
+
+Request to authenticate a payer, i.e. verify the identity of a cardholder.
+
+### Request Body
+
+```json
+{
+	"pp_Version": "2.0",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20221127183304",
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_3DS2ReturnURL": "http://localhost/MerchantSimulator/merchant/testview",
+	"pp_browser": "MOZILLA",
+	"pp_3DSecureChallengeWindowSize": "FULL_SCREEN",
+	"pp_acceptHeaders": "application/json",
+	"pp_colorDepth": "24",
+	"pp_javaEnabled": true,
+	"pp_language": "en-US",
+	"pp_screenHeight": "640",
+	"pp_screenWidth": "480",
+	"pp_timeZone": "273",
+	"pp_CustomerCardNumber": "5123456789012346",
+	"pp_CustomerCardExpiry": "12/22",
+	"pp_CustomerCardCvv": "123",
+	"pp_SecureHash": "",
+	"pp_UsageMode": "API",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "Yes",
+	"pp_JavaScriptEnabled": "true"
+}
+```
+
+| Parameter                          | Description                                                                                                                                              |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_Version"`                     | API Version. Fixed value `"1.1"` or `"2.0"` should be used.                                                                                              |
+| `"pp_TxnType"`                     | Presents the transaction type: `"MPAY"` (Direct Pay Mode) or `"AUTH"` (Authorize/Capture Mode)                                                           |
+| `"pp_TxnRefNo"`                    | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_MerchantID"`                  | Unique code assigned to each Merchant by PG.                                                                                                             |
+| `"pp_Password"`                    | Password assigned to each merchant and is used to authenticate merchant at the time of payment. Password is a system generated value.                    |
+| "pp_Amount                         | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_3DS2ReturnURL"`               | Merchant return URL after OTP verification.                                                                                                              |
+| `"pp_browser"`                     | The User-Agent header of the browser the customer used to place the order                                                                                |
+| `"pp_3DSecureChallengeWindowSize"` | Dimensions of the challenge window (in width x height in pixels) displayed to the payer during 3D-Secure authentication.                                 |
+| `"pp_acceptHeaders"`               | The content of the Accept request-header field as sent from the payer's browser.                                                                         |
+| `"pp_colorDepth"`                  | The bit depth (in bits per pixel) of the color palette for displaying images.                                                                            |
+| `"pp_javaEnabled"`                 | Indicates whether or not the payer's browser supports Java.                                                                                              |
+| `"pp_language"`                    | The language supported for the payer's browser.                                                                                                          |
+| `"pp_screenHeight"`                | The total height of the payer's browser screen in pixels.                                                                                                |
+| `"pp_screenWidth"`                 | The total width of the payer's browser screen in pixels.                                                                                                 |
+| `"pp_timeZone"`                    | Time difference between UTC time and the Cardholder browser local time, in minutes.                                                                      |
+| `"pp_CustomerCardNumber"`          | Card number of the customer making the payment. It should be of maximum 16 numeric digits.                                                               |
+| `"pp_CustomerCardExpiry"`          | Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).                                                                   |
+| `"pp_CustomerCardCvv"`             | Card verification value, as printed on the back or front of the card.                                                                                    |
+| `"pp_SecureHash"`                  | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+| `"pp_UsageMode"`                   | Authenticate Payer via API or PR                                                                                                                         |
+| `"pp_IsRegisteredCustomer"`        | It represents that the request has been made by the registered or a guest customer of a merchant.                                                        |
+| `"pp_ShouldTokenizeCardNumber"`    | This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.                                      |
+| `"pp_JavaScriptEnabled"`           | Indicates whether or not the payer's browser supports JavaScript                                                                                         |
+
+### Response Body
+
+```json
+{
+"responseCode": "000",
+"responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+"authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
+"status": "SUCCESS",
+"gatewayRecommendation": "PROCEED",
+"html":
+"
+<div id=\"threedsFrictionLessRedirect\" xmlns=\"http://www.w3.org/1999/html\">
+    <iframe id=\"challengeFrame\" name=\"challengeFrame\"> </iframe>
+    <form id=\"threedsFrictionLessRedirectForm\" method=\"POST\"
+          action=\"http://localhost/MerchantSimulator/merchant/testview\"
+          target=\"challengeFrame\">
+        <input type=\"hidden\" name=\"order.id\" value=\"RAFAYKHAN7T20221127183304\" />
+        <input type=\"hidden\" name=\"transaction.id\" value=\"221127664007\" />
+        <input type=\"hidden\" name=\"response.gatewayRecommendation\" value=\"PROCEED\" />
+        <input type=\"hidden\" name=\"result\" value=\"SUCCESS\" />
+    </form>
+    <script id=\"authenticate-payer-script\">
+        var e = document.getElementById(\"threedsFrictionLessRedirectForm\");
+        if (e) {
+            e.submit(); if (e.parentNode !== null) { e.parentNode.removeChild(e); }
+        }
+    </script>
+</div>",
+"secureHash": ""
+}
+```
+
+| Parameter                 | Description                                                                          |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `"responseCode"`          | Success / Failure Response code                                                      |
+| `"responseMessage"`       | Response message receive in case of success and failure.                             |
+| `"authenticationStatus"`  | AUTHENTICATION_AVAILABLE                                                             |
+| `"status"`                | SUCCESS                                                                              |
+| `"gatewayRecommendation"` | PROCEED                                                                              |
+| `"secureHash"`            | Used to allow the Payment Gateway to check the integrity of the transaction request. |
+
+## Authenticate Payer Via Token
+
+This request is made to interpret the authentication response returned from the card Issuer's Access Control Server (ACS) after the cardholder completes the authentication process using token. The response indicates the success or otherwise of the authentication.This request is specific for returning customer transaction.
+
+### Request Body
+
+```json
+{
+	"pp_Version": "2.0",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20221127192933",
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_3DS2ReturnURL": "http://localhost/MerchantSimulator/merchant/testview",
+	"pp_browser": "MOZILLA",
+	"pp_3DSecureChallengeWindowSize": "FULL_SCREEN",
+	"pp_acceptHeaders": "application/json",
+	"pp_colorDepth": "24",
+	"pp_javaEnabled": true,
+	"pp_language": "en-US",
+	"pp_screenHeight": "640",
+	"pp_screenWidth": "480",
+	"pp_timeZone": "273",
+	"pp_SecureHash": "",
+	"pp_UsageMode": "API",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "Yes",
+	"pp_JavaScriptEnabled": "true",
+	"pp_TokenizedCardNumber": "9228924639592086"
+}
+```
+
+| Parameter                       | Description                                                                                                                                              |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_Version"`                  | API Version. Fixed value `"1.1"` or `"2.0"` should be used                                                                                               |
+| `"pp_TxnType"`                  | Presents the transaction type: `"MPAY"` (Direct Pay Mode) or `"AUTH"` (Authorize/Capture Mode)                                                           |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_MerchantID"`               | Unique code assigned to each Merchant by PG.                                                                                                             |
+| `"pp_Password"`                 | Password assigned to each merchant and is used to authenticate merchant at the time of payment. Password is a system generated value.                    |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_3DS2ReturnURL"`            | Merchant return URL after OTP verification.                                                                                                              |
+| `"pp_browser"`                  | The User-Agent header of the browser the customer used to place the order                                                                                |
+| `"pp_acceptHeaders"`            | The content of the Accept request-header field as sent from the payer's browser.                                                                         |
+| `"pp_colorDepth"`               | The bit depth (in bits per pixel) of the color palette for displaying images.                                                                            |
+| `"pp_javaEnabled"`              | Indicates whether or not the payer's browser supports Java                                                                                               |
+| `"pp_language"`                 | The language supported for the payer's browser                                                                                                           |
+| `"pp_screenHeight"`             | The total height of the payer's browser screen in pixels.                                                                                                |
+| `"pp_screenWidth"`              | The total width of the payer's browser screen in pixels.                                                                                                 |
+| `"pp_timeZone"`                 | Time difference between UTC time and the Cardholder browser local time, in minutes.                                                                      |
+| `"pp_SecureHash"`               | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+| `"pp_UsageMode"`                | API OR PR                                                                                                                                                |
+| `"pp_IsRegisteredCustomer"`     | It represents that the request has been made by the registered or a guest customer of a merchant.                                                        |
+| `"pp_ShouldTokenizeCardNumber"` | This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.                                      |
+| `"pp_JavaScriptEnabled"`        | Indicates whether or not the payer's browser supports JavaScript                                                                                         |
+| `"pp_TokenizedCardNumber"`      | It represents the token for returning customer against their already saved card.                                                                         |
+
+### Response Body
+
+```json
+{
+"responseCode": "000",
+"responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+"authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
+"status": "SUCCESS",
+"gatewayRecommendation": "PROCEED",
+"html":"
+<div id=\"threedsFrictionLessRedirect\" xmlns=\"http://www.w3.org/1999/html\">
+    <iframe id=\"challengeFrame\" name=\"challengeFrame\"> </iframe>
+    <form id=\"threedsFrictionLessRedirectForm\" method=\"POST\"
+          action=\"http://localhost/MerchantSimulator/merchant/testview\"
+          target=\"challengeFrame\">
+        <input type=\"hidden\" name=\"order.id\" value=\"RAFAYKHAN7T20221127192933\" />
+        <input type=\"hidden\" name=\"transaction.id\" value=\"221127664012\" />
+        <input type=\"hidden\" name=\"response.gatewayRecommendation\" value=\"PROCEED\" />
+        <input type=\"hidden\" name=\"result\" value=\"SUCCESS\" />
+    </form>
+    <script id=\"authenticate-payer-script\">
+        var e = document.getElementById(\"threedsFrictionLessRedirectForm\");
+         if (e) {
+            e.submit();
+            if (e.parentNode !== null) { e.parentNode.removeChild(e); }
+        }
+    </script>
+</div>
+",
+"secureHash": ""
+}
+```
+
+| Parameter                 | Description                                                                          |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `"responseCode"`          | Success / Failure Response code                                                      |
+| `"responseMessage"`       | Response message receive in case of success and failure.                             |
+| `"authenticationStatus"`  | AUTHENTICATION_AVAILABLE                                                             |
+| `"status"`                | SUCCESS                                                                              |
+| `"gatewayRecommendation"` | PROCEED                                                                              |
+| `"secureHash"`            | Used to allow the Payment Gateway to check the integrity of the transaction request. |
+
+## Direct Pay
+
+This is a single transaction to authorize payment and transfer funds from payer's account to merchant’s account.
+
+### Request Body
+
+```json
+{
+	"pp_IsRegisteredCustomer": "yes",
+	"pp_ShouldTokenizeCardNumber": "yes",
+	"pp_CustomerID": "25352",
+	"pp_CustomerEmail": "abc@abc.com",
+	"pp_CustomerMobile": "03331234567",
+	"pp_Version": "2.0",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20221127183304",
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_TxnCurrency": "PKR",
+	"pp_TxnDateTime": "20221110140406",
+	"pp_TxnExpiryDateTime": "20221117140406",
+	"pp_BillReference": "billRef",
+	"pp_Description": "Description of transaction",
+	"pp_CustomerCardNumber": "5123456789012346",
+	"pp_CustomerCardCVV": "123",
+	"pp_CustomerCardExpiry": "12/22",
+	"pp_SecureHash": "",
+	"pp_DiscountedAmount": "",
+	"pp_DiscountBank": "",
+	"pp_UsageMode": "API"
+}
+```
+
+| Parameter                       | Description                                                                                                                                                                                                                                                          |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_IsRegisteredCustomer"`     | It represents that the request has been made by the registered or a guest customer of a merchant.                                                                                                                                                                    |
+| `"pp_ShouldTokenizeCardNumber"` | Its value represents of the customer has requested to save the card details. If its value is yes, then a token will be generated against the CHD and will be sent to merchant via ITN                                                                                |
+| `"pp_CustomerID"`               | Registered Customer's LoginID or Identifier provided by Merchant.                                                                                                                                                                                                    |
+| `"pp_CustomerEmail"`            | Registered Customer's email address provided by Merchant.                                                                                                                                                                                                            |
+| `"pp_CustomerMobile"`           | Registered Customer's mobile no. provided by Merchant.                                                                                                                                                                                                               |
+| `"pp_Version"`                  | API Version. Fixed value `"1.1"` or `"2.0"` should be used                                                                                                                                                                                                           |
+| `"pp_TxnType"`                  | For this transaction, it will be fixed value “MPAY”                                                                                                                                                                                                                  |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                  |
+| `"pp_MerchantID"`               | Unique merchant code assigned to each Merchant by PG.                                                                                                                                                                                                                |
+| `"pp_Password"`                 | Password assigned to each merchant and is used to authenticate merchant at the time of payment. Password is a system generated value.                                                                                                                                |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                             |
+| `"pp_TxnCurrency"`              | Currency of Transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                        |
+| `"pp_TxnDateTime"`              | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                                                                                                                                                    |
+| `"pp_TxnExpiryDateTime"`        | Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.                                                 |
+| `"pp_BillReference"`            | Bill/invoice Number being settled.                                                                                                                                                                                                                                   |
+| `"pp_Description"`              | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'\|"{} are inserted, they will be replaced with a space. |
+| `"pp_CustomerCardNumber"`       | Card number of the customer making the payment.                                                                                                                                                                                                                      |
+| `"pp_CustomerCardCvv"`          | Card verification value, as printed on the back or front of the card.                                                                                                                                                                                                |
+| `"pp_CustomerCardExpiry"`       | Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).                                                                                                                                                                               |
+| `"pp_SecureHash"`               | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                 |
+| `"pp_DiscountedAmount"`         | The discounted amount merchant wants to send. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                       |
+| `"pp_DiscountBank"`             | BankID of the bank for which merchant wish to send discount..                                                                                                                                                                                                        |
+| `"pp_UsageMode"`                | API OR PR                                                                                                                                                                                                                                                            |
+
+### Response Body
+
+```json
+{
+	"responseCode": "000",
+	"responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+	"status": "SUCCESS",
+	"pp_RetreivalReferenceNo": "221127664009",
+	"secureHash": ""
+}
+```
+
+| Parameter                   | Description                                                                                                                                       |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"responseCode"`            | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"responseMessage"`         | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"status"`                  | SUCCESS                                                                                                                                           |
+| `"pp_RetreivalReferenceNo"` | RRN Retreival Reference Number                                                                                                                    |
+| `"secureHash"`              | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+
+## Direct Pay via Token
+
+This is a single transaction to authorize payment and transfer funds from payer's account to merchant’s account using Token against customer's already saved card.This request is specific for returning customer transaction.
+
+### Request Body
+
+```json
+{
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "Yes",
+	"pp_CustomerID": "testPay",
+	"pp_CustomerEmail": "test@test.com",
+	"pp_CustomerMobile": "033456789025",
+	"pp_TxnType": "MPAY",
+	"pp_TxnRefNo": "T20190403093759",
+	"pp_MerchantID": "Merc0003",
+	"pp_Password": "0123456789",
+	"pp_Amount": "20000",
+	"pp_TxnCurrency": "PKR",
+	"pp_TxnDateTime": "20190403093750",
+	"pp_TxnExpiryDateTime": "20190403093747",
+	"pp_BillReference": "billRef",
+	"pp_Description": "Description of pay transaction",
+	"pp_TokenizedCardNumber": "9790662127634170",
+	"pp_CustomerCardCvv": "123",
+	"pp_SecureHash": "1B7082A29290BF222194C0CEF052D08F7E16",
+	"pp_Version": "2.0"
+}
+```
+
+| Parameter                       | Description                                                                                                                                                                                                                                                                                 |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_IsRegisteredCustomer"`     | It represents that the request has been made by the registered or a guest customer of a merchant.                                                                                                                                                                                           |
+| `"pp_ShouldTokenizeCardNumber"` | Its value represents of the customer has requested to save the card details. If its value is yes, then a token will be generated against the CHD and will be sent to merchant via ITN                                                                                                       |
+| `"pp_CustomerID"`               | Registered Customer's LoginID or Identifier provided by Merchant.                                                                                                                                                                                                                           |
+| `"pp_CustomerEmail"`            | Registered Customer's email address provided by Merchant.                                                                                                                                                                                                                                   |
+| `"pp_CustomerMobile"`           | Registered Customer's mobile no. provided by Merchant.                                                                                                                                                                                                                                      |
+| `"pp_TxnType"`                  | For this transaction, it will be fixed value “MPAY”                                                                                                                                                                                                                                         |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                                         |
+| `"pp_MerchantID"`               | Unique merchant code assigned to each Merchant by PG.                                                                                                                                                                                                                                       |
+| `"pp_Password"`                 | Password assigned to each merchant and is used to authenticate merchant at the time of payment. Password is a system generated value.                                                                                                                                                       |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                                                    |
+| `"pp_TxnCurrency"`              | Currency of Transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                                               |
+| `"pp_TxnDateTime"`              | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                                                                                                                                                                           |
+| `"pp_TxnExpiryDateTime"`        | Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.                                                                        |
+| `"pp_BillReference"`            | Bill/invoice Number being settled.                                                                                                                                                                                                                                                          |
+| `"pp_Description"`              | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'"{} are inserted, they will be replaced with a space. Pipe ‘\|’ is not allowed |
+| `"pp_TokenizedCardNumber"`      | It represents the tokenized card number of returning customer. This token will be received to the merchant in response of Pay request when saved card details was selected by the customer on Payment portal.                                                                               |
+| `"pp_CustomerCardCvv"`          | Customer Card CVV mentioned on back of card                                                                                                                                                                                                                                                 |
+| `"pp_SecureHash"`               | Checksum to check the integrity of the transaction request by PG                                                                                                                                                                                                                            |
+| `"pp_Version"`                  | API Version. Fixed value `"1.1"` or `"2.0"` should be used                                                                                                                                                                                                                                  |
+
+### Response Body
+
+```json
+{
+	"responseCode": "000",
+	"responseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+	"status": "SUCCESS",
+	"pp_RetreivalReferenceNo": "221211678054",
+	"secureHash": ""
+}
+```
+
+| Parameter                   | Description                                                                                                                                       |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"responseCode"`            | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"responseMessage"`         | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"status"`                  | SUCCESS                                                                                                                                           |
+| `"pp_RetreivalReferenceNo"` | RRN Retreival Reference Number                                                                                                                    |
+| `"secureHash"`              | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+
+## Authorize
+
+This is a request to obtain an authorization for a proposed funds transfer. An authorization is a response from a financial institution indicating that payment information is valid and funds are available in the payer's account.
+
+### Request Body
+
+```json
+{
+	"pp_InstrumentType": "CARD",
+	"pp_Frequency": "SINGLE",
+	"pp_TxnRefNo": "T20190620102046",
+	"pp_Amount": "1000",
+	"pp_TxnCurrency": "PKR",
+	"pp_CustomerCardNumber": "5123456789012346",
+	"pp_CustomerCardExpiry": "0120",
+	"pp_CustomerCardCvv": "111",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_CustomerID": "test",
+	"pp_CustomerEmail": "test@test.com",
+	"pp_CustomerMobile": "03222852628",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_ShouldTokenizeCardNumber": "No",
+	"pp_3DSecureID": "20190620102712564329",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter                       | Description                                                                                                                                                                                                                                                                                                                                                                |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_InstrumentType"`           | Type of instrument used for making payment.                                                                                                                                                                                                                                                                                                                                |
+| `"pp_Frequency"`                | Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments. |
+| `"pp_TxnRefNo"`                 | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                                                                                                                        |
+| `"pp_Amount"`                   | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                                                                                                                                   |
+| `"pp_TxnCurrency"`              | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                                                                                                                              |
+| `"pp_CustomerCardNumber"`       | Card number of the customer making the payment.                                                                                                                                                                                                                                                                                                                            |
+| `"pp_CustomerCardExpiry"`       | Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).                                                                                                                                                                                                                                                                                     |
+| `"pp_CustomerCardCvv"`          | Card verification value, as printed on the back or front of the card.                                                                                                                                                                                                                                                                                                      |
+| `"pp_MerchantID"`               | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                                                                                                                                |
+| `"pp_Password"`                 | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                                                                                                                           |
+| `"pp_CustomerID"`               | Registered Customer's LoginID or Identifier address provided by Merchant.                                                                                                                                                                                                                                                                                                  |
+| `"pp_CustomerEmail"`            | Registered Customer's Email address provided by Merchant.                                                                                                                                                                                                                                                                                                                  |
+| `"pp_CustomerMobile"`           | Regsitered Customer's Mobile Number provided by Merchant.                                                                                                                                                                                                                                                                                                                  |
+| `"pp_IsRegisteredCustomer"`     | Yes, if user is already registered. No, if customer is not.                                                                                                                                                                                                                                                                                                                |
+| `"pp_ShouldTokenizeCardNumber"` | It represents the request for Create token against provided customer card details,inorder to avoid entering complete card information for future use.                                                                                                                                                                                                                      |
+| `"pp_3dSecureID"`               | A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.                                                                                                                                                                                                                                                                                    |
+| `"pp_SecureHash"`               | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                                                                                                                       |
+
+### Response Body
+
+```json
+{
+	"pp_InstrToken": "F0C774F759EAB8E71ADDD7A4241A3330352F566961EB3B317F8E96D1C18DDA24",
+	"pp_TokenizationResponseCode": "",
+	"pp_TokenizationResponseMessage": "",
+	"pp_CustomerCardNumber": "5123456789012346",
+	"pp_CustomerCardExpiry": "0120",
+	"pp_CustomerID": "test",
+	"pp_CustomerEmail": "test@test.com",
+	"pp_CustomerMobile": "03222852628",
+	"pp_ShouldTokenizeCardNumber": "No",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_TxnRefNo": "T20190620102046",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_Amount": "1000",
+	"pp_TxnCurrency": "PKR",
+	"pp_InstrumentType": "CARD",
+	"pp_Frequency": "SINGLE",
+	"pp_3DSecureID": "20190620102712564329",
+	"pp_SecureHash": "",
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful. "
+}
+```
+
+| Parameter                          | Description                                                                                                                                                                                                                                                                                                                                                                |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_InstrToken"`                  |                                                                                                                                                                                                                                                                                                                                                                            |
+| `"pp_TokenizationResponseCode"`    | Response code representing whether token generated successfully or not. A response code of T01 represents success.                                                                                                                                                                                                                                                         |
+| `"pp_TokenizationResponseMessage"` | Error details in case the token failed to be processed. This field will be mandatory for all cases where response code is not equal to T01.                                                                                                                                                                                                                                |
+| `"pp_CustomerCardNumber"`          | Card number of the customer making the payment.                                                                                                                                                                                                                                                                                                                            |
+| `"pp_CustomerCardExpiry"`          | Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).                                                                                                                                                                                                                                                                                     |
+| `"pp_CustomerID"`                  | Customer's LoginID or Identifier address provided by Merchant.                                                                                                                                                                                                                                                                                                             |
+| `"pp_CustomerEmail"`               | Customer's Email address provided by Merchant.                                                                                                                                                                                                                                                                                                                             |
+| `"pp_CustomerMobile"`              | Customer's Mobile Number provided by Merchant.                                                                                                                                                                                                                                                                                                                             |
+| `"pp_ShouldTokenizeCardNumber"`    | It represents the request for Create token against provided customer card details,inorder to avoid entering complete card information for future use.                                                                                                                                                                                                                      |
+| `"pp_IsRegisteredCustomer"`        | Yes, if user is already registered. No, if customer is not.                                                                                                                                                                                                                                                                                                                |
+| `"pp_TxnRefNo"`                    | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                                                                                                                        |
+| `"pp_MerchantID"`                  | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                                                                                                                                |
+| `"pp_Password"`                    | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                                                                                                                           |
+| `"pp_Amount"`                      | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                                                                                                                                   |
+| `"pp_TxnCurrency"`                 | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                                                                                                                              |
+| `"pp_InstrumentType"`              | Type of instrument used for making payment.                                                                                                                                                                                                                                                                                                                                |
+| `"pp_Frequency"`                   | Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments. |
+| `"pp_3dSecureID"`                  | A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.                                                                                                                                                                                                                                                                                    |
+| `"pp_SecureHash"`                  | Used to allow the Merchant to check the integrity of the transaction response.                                                                                                                                                                                                                                                                                             |
+| `"pp_ResponseCode"`                | Response code representing the transaction success or failure. A response code of 000 represents success.                                                                                                                                                                                                                                                                  |
+| `"pp_ResponseMessage"`             | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.                                                                                                                                                                                                                          |
+
+## Authorize Via Token
+
+This is a request to obtain an authorization for a proposed funds transfer. An authorization is a response from a financial institution indicating that payment information is valid and funds are available in the payer's account.
+
+### Request Body
+
+```json
+{
+	"pp_InstrumentType": "CARD",
+	"pp_Frequency": "SINGLE",
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_TxnRefNo": "T20190614173948",
+	"pp_Amount": "10000",
+	"pp_TxnCurrency": "PKR",
+	"pp_TokenizedCardNumber": "9580698967588146",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_CustomerID": "test",
+	"pp_CustomerEmail": "test@test.com",
+	"pp_CustomerMobile": "03222852628",
+	"pp_3DSecureID": "",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter                 | Description                                                                                                                                                                                                                                                                                                                                                                |
+| :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_InstrumentType"`     | Type of instrument used for making payment.                                                                                                                                                                                                                                                                                                                                |
+| `"pp_Frequency"`          | Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments. |
+| `"pp_TxnRefNo"`           | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                                                                                                                        |
+| `"pp_Amount"`             | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                                                                                                                                   |
+| `"pp_TxnCurrency"`        | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                                                                                                                              |
+| `"pp_CustomerCardNumber"` | Card number of the customer making the payment.                                                                                                                                                                                                                                                                                                                            |
+| `"pp_CustomerCardExpiry"` | Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).                                                                                                                                                                                                                                                                                     |
+| `"pp_CustomerCardCvv"`    | Card verification value, as printed on the back or front of the card.                                                                                                                                                                                                                                                                                                      |
+| `"pp_MerchantID"`         | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                                                                                                                                |
+| `"pp_Password"`           | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                                                                                                                           |
+| `"pp_SecureHash"`         | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                                                                                                                       |
+| `"pp_Frequency"`          | Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments. |
+
+### Response Body
+
+```json
+{
+	"pp_IsRegisteredCustomer": "Yes",
+	"pp_TxnRefNo": "T20190620170650",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_Amount": "10000",
+	"pp_TxnCurrency": "PKR",
+	"pp_InstrumentType": "CARD",
+	"pp_Frequency": "SINGLE",
+	"pp_3DSecureID": "",
+	"pp_InstrToken": "",
+	"pp_CustomerID": "test",
+	"pp_CustomerEmail": "test@test.com",
+	"pp_CustomerMobile": "03222852628",
+	"pp_TokenizedCardNumber": "9580698967588146",
+	"pp_SecureHash": "EB35B67EBCBF17238F63E165543520E31AAFF1F9763662BA4FEFA00EBA8D90E9",
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful. "
+}
+```
+
+| Parameter                   | Description                                                                                                                                                                                                                                                                                                                                                                |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_IsRegisteredCustomer"` | Yes, if user is already registered. No, if customer is not.                                                                                                                                                                                                                                                                                                                |
+| `"pp_TxnRefNo"`             | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                                                                                                                        |
+| `"pp_MerchantID"`           | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                                                                                                                                |
+| `"pp_Password"`             | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                                                                                                                           |
+| `"pp_Amount"`               | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                                                                                                                                   |
+| `"pp_TxnCurrency"`          | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                                                                                                                              |
+| `"pp_InstrumentType"`       | Type of instrument used for making payment.                                                                                                                                                                                                                                                                                                                                |
+| `"pp_Frequency"`            | Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments. |
+| `"pp_3dSecureID"`           | A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.                                                                                                                                                                                                                                                                                    |
+| `"pp_InstrToken"`           |                                                                                                                                                                                                                                                                                                                                                                            |
+| `"pp_CustomerID"`           | Customer's LoginID or Identifier address provided by Merchant.                                                                                                                                                                                                                                                                                                             |
+| `"pp_CustomerEmail"`        | Customer's Email address provided by Merchant.                                                                                                                                                                                                                                                                                                                             |
+| `"pp_CustomerMobile"`       | Customer's Mobile Number provided by Merchant.                                                                                                                                                                                                                                                                                                                             |
+| `"pp_TokenizedCardNumber"`  | It represents the token for returning customer against their already saved card.                                                                                                                                                                                                                                                                                           |
+| `"pp_SecureHash"`           | Used to allow the merchant to check the integrity of the transaction response.                                                                                                                                                                                                                                                                                             |
+| `"pp_ResponseCode"`         | Response code representing the transaction success or failure. A response code of 000 represents success.                                                                                                                                                                                                                                                                  |
+| `"pp_ResponseMessage"`      | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.                                                                                                                                                                                                                          |
+
+## Capture
+
+This is a request to capture funds previously reserved by an authorization. A Capture transaction triggers the movement of funds from the payer's account to the merchant's account.
+
+### Request Body
+
+```json
+{
+	"pp_TxnRefNo": "T20190620102046",
+	"pp_Amount": "1000",
+	"pp_TxnCurrency": "PKR",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_3DSecureID": "20190620102712564329",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter          | Description                                                                                                                                              |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_TxnRefNo"`    | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_Amount"`      | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_TxnCurrency"` | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                            |
+| `"pp_MerchantID"`  | Unique Id assigned to each merchant by the payment gateway.                                                                                              |
+| `"pp_Password"`    | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                         |
+| `"pp_SecureHash"`  | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+
+### Response Body
+
+```json
+{
+	"pp_TxnRefNo": "T20190620102046",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_Amount": "1000",
+	"pp_TxnCurrency": "PKR",
+	"pp_3DSecureID": "20190620102712564329",
+	"pp_SecureHash": "",
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful. "
+}
+```
+
+| Parameter              | Description                                                                                                                                              |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_TxnRefNo"`        | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_MerchantID"`      | Unique Id assigned to each merchant by the payment gateway.                                                                                              |
+| `"pp_Password"`        | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                         |
+| `"pp_Amount"`          | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_TxnCurrency"`     | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                            |
+| `"pp_3dSecureID"`      | A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.                                                                  |
+| `"pp_SecureHash"`      | Used to allow the Merchant to check the integrity of the transaction response.                                                                           |
+| `"pp_ResponseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                                |
+| `"pp_ResponseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.        |
+
+## Retrieve
+
+This is a request to retrieve the details of an order and all transactions associated with this order.
+
+### Request Body
+
+```json
+{
+	"pp_TxnRefNo": "T20170518161115",
+	"pp_MerchantID": "Test00127801",
+	"pp_Password": "0123456789",
+	"pp_SecureHash": "",
+	"pp_Version": "2.0"
+}
+```
+
+| Parameter         | Description                                                                                                                      |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_TxnRefNo"`   | A unique value created by the merchant to identify the transaction.                                                              |
+| `"pp_MerchantID"` | Unique Id assigned to each merchant by the payment gateway.                                                                      |
+| `"pp_Password"`   | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value. |
+| `"pp_SecureHash"` | Used to allow the Payment Gateway to check the integrity of the transaction request.                                             |
+| `"pp_Version"`    | Payment Portal Version. Fixed value `"1.1"` should be used.                                                                      |
+
+### Response Body
+
+```json
+{
+	"status": "",
+	"rrn": "",
+	"settlementDate": "",
+	"settlementExpiryDate": "",
+	"authCode": "",
+	"bankID": "",
+	"productID": ""
+}
+```
+
+| Parameter                | Description                                                                                                                                                                                                                                                                                                                                                             |
+| :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"status"`               | Status of the transaction at JazzCash payment gateway.                                                                                                                                                                                                                                                                                                                  |
+| `"rrn"`                  | A unique number generated by the Payment Gateway at the time of transaction processing. The number should be stored and used for future reference. The number is unique for any given date.                                                                                                                                                                             |
+| `"settlementDate"`       | A date supplied by the Payment Gateway to indicate when this transaction will be settled. When the Payment Gateway closes the batch at the end of the day, the date will roll over to the next processing day’s date. This date will only be provided in case a transaction is already confirmed by the merchant.                                                       |
+| `"settlementExpiryDate"` | A date supplied by the Payment Gateway indicating that if the merchant does not send a confirmation of the transaction by this time, the payment gateway will mark the transaction as expired and the merchant will not be able to resume it. This field will be mandatory where Auth Code is available.                                                                |
+| `"authCode"`             | An identifying code issued by the issuing bank to approve or deny the transaction. The field is mandatory in case of successful response code. Refer to Appendix I for a list of response codes and the codes which when sent will require Auth Code.                                                                                                                   |
+| `"bankID"`               | This field will only be used in case of Direct Debit transaction type, otherwise it should be sent as an empty field. Customer's bank that authorized the transaction.                                                                                                                                                                                                  |
+| `"productID"`            | This field will only be used in case of Direct Debit transaction type. Product ID of bank through which payment has been performed. e.g. Retail, Corporate. Fixed values: ‘RETL’, ‘CORP’. In case value was provided at the time of request, this field will contain the same value. Otherwise, ID of the product chosen by customer at Payment Gateway will be filled. |

@@ -1,0 +1,136 @@
+---
+title: Refund
+description: API reference for processing partial and full refunds on mobile account, card, and voucher transactions.
+---
+
+Following refund based API's are available with detailed description and relevant information.
+
+## Mobile Account Refund API
+
+This is a request for refund transaction of mobile account.
+
+### Request Body
+
+```json
+{
+	"pp_TxnRefNo": "T20190515094840",
+	"pp_Amount": "20000",
+	"pp_TxnCurrency": "PKR",
+	"pp_MerchantID": "MC2645",
+	"pp_Password": "vgyttef556",
+	"pp_MerchantMPIN": "1111",
+	"pp_SecureHash": "70524E8D609D14F2D9DF6DB4887A36EA0D4A247B0EB4B3E85730FCD4D9C74503"
+}
+```
+
+| Parameter           | Description                                                                                                                                              |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_TxnRefNo"`     | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_Amount"`       | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_TxnCurrency"`  | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                            |
+| `"pp_MerchantMPIN"` | 4 digit numeric MPIN of JazzCash mobile Accounty.                                                                                                        |
+| `"pp_MerchantID"`   | Unique Id assigned to each merchant by the payment gateway.                                                                                              |
+| `"pp_Password"`     | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                         |
+| `"pp_SecureHash"`   | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+
+### Response Body
+
+```json
+{
+	"pp_SecureHash": "",
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful."
+}
+```
+
+| Parameter           | Description                                                                                                                                       |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_SecureHash"`   | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+| `"responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+
+## Card Refund API
+
+This is a request for refund transaction of direct pay.
+
+### Request Body
+
+```json
+{
+	"pp_TxnRefNo": "T20201204151517",
+	"pp_Amount": "10000",
+	"pp_TxnCurrency": "PKR",
+	"pp_MerchantID": "MC2645",
+	"pp_Password": "vgyttef556",
+	"pp_SecureHash": "F1CB6FE2F69A5B86C63B49F309AC37BBC40FE6A5394CED7147C6876820F6A1AF"
+}
+```
+
+| Parameter          | Description                                                                                                                                              |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_TxnRefNo"`    | A unique value created by the merchant to identify the transaction.                                                                                      |
+| `"pp_Amount"`      | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_TxnCurrency"` | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                            |
+| `"pp_MerchantID"`  | Unique Id assigned to each merchant by the payment gateway.                                                                                              |
+| `"pp_Password"`    | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                         |
+| `"pp_SecureHash"`  | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+
+### Response Body
+
+```json
+{
+	"pp_SecureHash": "",
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful."
+}
+```
+
+| Parameter           | Description                                                                                                                                       |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_SecureHash"`   | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+| `"responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+
+## Voucher Refund API
+
+This is a request for refund transaction of Voucher.
+
+### Request Body
+
+```json
+{
+	"pp_VoucherID": "210401236561",
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_CNIC": "4201234567890",
+	"pp_Currency": "PKR",
+	"pp_Amount": "10000",
+	"pp_SecureHash": "7AC1F74C9FEBFDBAB1BCABC4B5E19A6DAEE5A7BE2AD067FE0C729B44061AC9FC"
+}
+```
+
+| Parameter          | Description                                                                                                                                              |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_VoucherID"`   | A unique value created by the merchant to identify the voucher.                                                                                          |
+| `"pp_CNIC"`        | This field will contain Customer's last 6 digits of CNIC (used only in version 2.0)                                                                      |
+| `"pp_Amount"`      | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. |
+| `"pp_TxnCurrency"` | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                            |
+| `"pp_MerchantID"`  | Unique Id assigned to each merchant by the payment gateway.                                                                                              |
+| `"pp_Password"`    | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                         |
+| `"pp_SecureHash"`  | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                     |
+
+### Response Body
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "The requested operation has been performed successfully.",
+	"pp_SecureHash": "0E8803FDD5C918F31C8ED3171EE8C12C26E6903ED20FC459103E56525FB514E9"
+}
+```
+
+| Parameter              | Description                                                                                                                                       |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_SecureHash"`      | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+| `"pp_responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"pp_responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |

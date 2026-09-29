@@ -1,0 +1,4 @@
+{
+	"title": "Features",
+	"pages": ["payment-solutions", "supported-card-scheme", "tokenization", "3d-secure", "hashing-scheme", "ipn-web-hook", "itn-web-hook"]
+}

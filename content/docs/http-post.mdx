@@ -1,0 +1,248 @@
+---
+title: HTTP POST (Page Redirection)
+description: Integrate JazzCash hosted checkout and payment page redirection via standard HTTP POST.
+---
+
+For an HTTP Post mode of integration, merchant can choose from Custom Development or Plugins while developing his e-commerce website.
+
+## Custom Development
+
+The merchant may choose to develop a customized website using online resources including different platforms available over the World Wide Web. The following criteria has to be followed in order to further proceed with the integration.
+
+The merchant would then be required to select a transaction type from the below mentioned list:
+
+1. Card Payment
+2. Mobile Account
+3. Voucher Payment
+
+- After selecting the preferred transaction type, a list of codes become available for the merchant to copy (a `copy` button is also visible on the bottom left).
+
+### For Card Payment:
+
+```html
+<script>
+	function submitForm() {
+		document.jsform.submit();
+	}
+</script>
+
+<form name="jsform" method="post" action='@System.Configuration.ConfigurationManager.AppSettings\["PAYMENT\_PORTAL\_URL"\]'>
+	<input type="text" name="pp\_Version" value="2.0" />
+	<input type="text" name="pp\_TxnType" value="MPAY" />
+	<input type="text" name="pp\_Language" value="EN" />
+	<input type="text" name="pp\_MerchantID" value="" />
+	<input type="text" name="pp\_SubMerchantID" value="" />
+	<input type="text" name="pp\_Password" />
+	<input type="text" name="pp\_BankID" value="" />
+	<input type="text" name="pp\_ProductID" value="" />
+	<input type="text" name="pp\_IsRegisteredCustomer" value="Yes" />
+	<input type="text" name="pp\_TokenizedCardNumber" value="" />
+	<input type="text" name="pp\_CustomerID" value="Test" />
+	<input type="text" name="pp\_CustomerEmail" value="test@gmail.com" />
+	<input type="text" name="pp\_CustomerMobile" value="0343456789" />
+	<input type="text" name="pp\_TxnRefNo" value="T2017061995819" />
+	<input type="text" name="pp\_Amount" value="1000" />
+	<input type="text" name="pp\_TxnCurrency" value="PKR" />
+	<input type="text" name="pp\_TxnDateTime" value="2017061995819" />
+	<input type="text" name="pp\_BillReference" value="billRef" />
+	<input type="text" name="pp\_Description" value="Description of transaction" />
+	<input type="text" name="pp\_TxnExpiryDateTime" value="2017062095819" />
+	<input type="text" name="pp\_ReturnURL" />
+	<input type="text" name="pp\_SecureHash" value="" />
+	<input type="text" name="ppmpf\_1" value="1" />
+	<input type="text" name="ppmpf\_2" value="2" />
+	<input type="text" name="ppmpf\_3" value="3" />
+	<input type="text" name="ppmpf\_4" value="4" />
+	<input type="text" name="ppmpf\_5" value="5" />
+
+	<button type="button" onclick="submitForm()">Submit</button>
+</form>
+```
+
+### For Mobile Account:
+
+```html
+<script>
+	function submitForm() {
+		document.jsform.submit();
+	}
+</script>
+
+<form name="jsform" method="post" action='@System.Configuration.ConfigurationManager.AppSettings\["PAYMENT\_PORTAL\_URL"\]'>
+	<input type="hidden" name="pp\_Version" value="1.1" />
+	<input type="hidden" name="pp\_TxnType" value="MWALLET" />
+	<input type="hidden" name="pp\_Language" value="EN" />
+	<input type="hidden" name="pp\_MerchantID" value="" />
+	<input type="hidden" name="pp\_SubMerchantID" value="" />
+	<input type="hidden" name="pp\_Password" />
+	<input type="hidden" name="pp\_BankID" value="TBANK" />
+	<input type="hidden" name="pp\_ProductID" value="RETL" />
+
+	<label class="">Ref Number: </label>
+	<input type="text" name="pp\_TxnRefNo" value="T2017061995819" />
+
+	<label class="">Amount: </label>
+	<input type="text" name="pp\_Amount" value="1000" />
+
+	<input type="hidden" name="pp\_TxnCurrency" value="PKR" />
+	<input type="hidden" name="pp\_TxnDateTime" value="2017061995819" />
+
+	<label class="">Bill Reference: </label>
+	<input type="text" name="pp\_BillReference" value="billRef" />
+
+	<label class="">Description: </label>
+	<input type="text" name="pp\_Description" value="Description of transaction" />
+
+	<input type="hidden" name="pp\_TxnExpiryDateTime" value="2017062095819" />
+
+	<label class="">Return URL: </label>
+	<input type="text" name="pp\_ReturnURL" />
+
+	<input type="hidden" name="pp\_SecureHash" value="" />
+	<input type="hidden" name="ppmpf\_1" value="1" />
+	<input type="hidden" name="ppmpf\_2" value="2" />
+	<input type="hidden" name="ppmpf\_3" value="3" />
+	<input type="hidden" name="ppmpf\_4" value="4" />
+	<input type="hidden" name="ppmpf\_5" value="5" />
+
+	<button type="button" onclick="submitForm()">Submit</button>
+</form>
+```
+
+### For Voucher Payment:
+
+```html
+<script>
+	function submitForm() {
+		document.jsform.submit();
+	}
+</script>
+
+<form name="jsform" method="post" action='@System.Configuration.ConfigurationManager.AppSettings\["PAYMENT\_PORTAL\_URL"\]'>
+	<input type="hidden" name="pp\_Version" value="1.1" />
+	<input type="hidden" name="pp\_TxnType" value="OTC" />
+	<input type="hidden" name="pp\_Language" value="EN" />
+	<input type="hidden" name="pp\_MerchantID" value="" />
+	<input type="hidden" name="pp\_SubMerchantID" value="" />
+	<input type="hidden" name="pp\_Password" />
+	<input type="hidden" name="pp\_BankID" value="TBANK" />
+	<input type="hidden" name="pp\_ProductID" value="RETL" />
+
+	<label class="">Ref Number: </label>
+	<input type="text" name="pp\_TxnRefNo" value="T2017061995819" />
+
+	<label class="">Amount: </label>
+	<input type="text" name="pp\_Amount" value="1000" />
+
+	<input type="hidden" name="pp\_TxnCurrency" value="PKR" />
+	<input type="hidden" name="pp\_TxnDateTime" value="2017061995819" />
+
+	<label class="">Bill Reference: </label>
+	<input type="text" name="pp\_BillReference" value="billRef" />
+
+	<label class="">Description: </label>
+	<input type="text" name="pp\_Description" value="Description of transaction" />
+
+	<input type="hidden" name="pp\_TxnExpiryDateTime" value="2017062095819" />
+
+	<label class="">Return URL: </label>
+	<input type="text" name="pp\_ReturnURL" />
+
+	<input type="hidden" name="pp\_SecureHash" value="" />
+	<input type="hidden" name="ppmpf\_1" value="1" />
+	<input type="hidden" name="ppmpf\_2" value="2" />
+	<input type="hidden" name="ppmpf\_3" value="3" />
+	<input type="hidden" name="ppmpf\_4" value="4" />
+	<input type="hidden" name="ppmpf\_5" value="5" />
+
+	<button type="button" onclick="submitForm()">Submit</button>
+</form>
+```
+
+- The merchant copies and pastes the codes in the custom created website.
+- This generates a mockup HTTP POST request for payment via page redirection.
+- The merchant can then view the call log to track the request's validation status.
+
+## Plugins
+
+JazzCash also offers a portfolio of plugins to choose from. Merchants only need to download their preferred plugin to start integration. These plugins include:
+
+<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 my-6">
+	<div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+		<div className="flex h-16 w-full items-center justify-center">
+			<img
+				src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/magento/magento-original.svg"
+				alt="Magento"
+				className="max-h-12 max-w-30 object-contain"
+			/>
+		</div>
+		<span className="mt-3 text-sm font-medium text-fd-foreground">Magento</span>
+	</div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://cdn.worldvectorlogo.com/logos/opencart.svg"
+    			alt="OpenCart"
+    			className="max-h-10 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">OpenCart</span>
+    </div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://cdn.worldvectorlogo.com/logos/prestashop.svg"
+    			alt="PrestaShop"
+    			className="max-h-12 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">PrestaShop</span>
+    </div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/woocommerce/woocommerce-original.svg"
+    			alt="WooCommerce"
+    			className="max-h-10 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">WooCommerce</span>
+    </div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://cdn.worldvectorlogo.com/logos/joomla.svg"
+    			alt="Joomla"
+    			className="max-h-12 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">Joomla</span>
+    </div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://avatars.githubusercontent.com/u/57830?v=4"
+    			alt="osCommerce"
+    			className="max-h-12 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">osCommerce</span>
+    </div>
+
+    <div className="flex flex-col items-center justify-center rounded-xl border border-fd-border bg-fd-card p-6 text-center shadow-xs transition-colors hover:border-fd-primary/30">
+    	<div className="flex h-16 w-full items-center justify-center">
+    		<img
+    			src="https://avatars.githubusercontent.com/u/20768?v=4"
+    			alt="ZenCart"
+    			className="max-h-12 max-w-30 object-contain"
+    		/>
+    	</div>
+    	<span className="mt-3 text-sm font-medium text-fd-foreground">ZenCart</span>
+    </div>
+
+</div>

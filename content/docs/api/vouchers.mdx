@@ -1,0 +1,136 @@
+---
+title: Vouchers
+description: API reference for Over-The-Counter (OTC) voucher generation, payment processing, and voucher expiry management.
+---
+
+Following Voucher (Over The Counter) based API's are available with detailed description and relevant information.
+
+## REST based Voucher Payment API
+
+This is REST based API used for the transaction of Voucher as payment instrument.
+
+### Request Body
+
+```json
+{
+	"pp_Version": "1.1",
+	"pp_TxnType": "OTC",
+	"pp_Language": "EN",
+	"pp_MerchantID": "Test00127801",
+	"pp_SubMerchantID": "",
+	"pp_Password": "0123456789",
+	"pp_BankID": "",
+	"pp_ProductID": "",
+	"pp_TxnRefNo": "T20170517101549",
+	"pp_Amount": "100",
+	"pp_TxnCurrency": "PKR",
+	"pp_TxnDateTime": "20170517101549",
+	"pp_BillReference": "billRef",
+	"pp_Description": "Description",
+	"pp_TxnExpiryDateTime": "20170824101549",
+	"pp_ReturnURL": "http://localhost/MerchantSimulator/HttpRequestDemoServer/Index",
+	"pp_SecureHash": "",
+	"ppmpf_1": "03122036440",
+	"ppmpf_2": "",
+	"ppmpf_3": "",
+	"ppmpf_4": "",
+	"ppmpf_5": ""
+}
+```
+
+| Parameter                | Description                                                                                                                                                                                                                                                          |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_Version"`           | Payment Portal Version. Fixed value `"1.1"` should be used.                                                                                                                                                                                                          |
+| `"pp_TxnType"`           | Type of instrument used for making payment.                                                                                                                                                                                                                          |
+| `"pp_Language"`          | Specifies the language in which to display the page. Fixed value `"EN"`.                                                                                                                                                                                             |
+| `"pp_MerchantID"`        | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                          |
+| `"pp_SubMerchantID"`     | Unique Id assigned to each sub merchant by the payment gateway.                                                                                                                                                                                                      |
+| `"pp_Password"`          | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                     |
+| `"pp_TxnRefNo"`          | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                  |
+| `"pp_Amount"`            | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                                                                                             |
+| `"pp_TxnCurrency"`       | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                        |
+| `"pp_TxnDateTime"`       | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                                                                                                                                                    |
+| `"pp_BillReference"`     | Bill/invoice Number being settled.                                                                                                                                                                                                                                   |
+| `"pp_Description"`       | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'\|"{} are inserted, they will be replaced with a space. |
+| `"pp_TxnExpiryDateTime"` | Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.                                                 |
+| `"pp_ReturnURL"`         | The URL where merchant wants the transaction results to be shown. Once the transaction has been processed, response details will be sent over to the merchant on this URL using an HTTP POST Request.                                                                |
+| `"pp_SecureHash"`        | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                 |
+
+### Response Body
+
+```json
+{
+	"pp_Amount": "",
+	"pp_AuthCode": "",
+	"pp_BankID": "",
+	"pp_BillReference": "",
+	"pp_Language": "",
+	"pp_MerchantID": "",
+	"pp_ResponseCode": "",
+	"pp_ResponseMessage": "",
+	"pp_RetreivalReferenceNo": "",
+	"pp_SubMerchantId": "",
+	"pp_TxnCurrency": "",
+	"pp_TxnDateTime": "",
+	"pp_TxnRefNo": "",
+	"pp_SettlementExpiry": "",
+	"pp_TxnType": "",
+	"pp_Version": "",
+	"ppmbf_1": "",
+	"ppmbf_2": "",
+	"ppmbf_3": "",
+	"ppmbf_4": "",
+	"ppmbf_5": "",
+	"ppmpf_1": "",
+	"ppmpf_2": "",
+	"ppmpf_3": "",
+	"ppmpf_4": "",
+	"ppmpf_5": "",
+	"pp_SecureHash": ""
+}
+```
+
+| Parameter           | Description                                                                                                                                       |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+
+## REST based Expire Voucher API
+
+This API is used to expire the given voucher on merchant’s consent
+
+### Request Body
+
+```json
+{
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_Voucher": "210331232548",
+	"pp_SecureHash": "7AC1F74C9FEBFDBAB1BCABC4B5E19A6DAEE5A7BE2AD067FE0C729B44061AC9FC"
+}
+```
+
+| Parameter         | Description                                                                                                                      |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_MerchantID"` | Unique Id assigned to each merchant by the payment gateway.                                                                      |
+| `"pp_Voucher"`    | A unique value created by the merchant to identify the voucher.                                                                  |
+| `"pp_Password"`   | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value. |
+| `"pp_SecureHash"` | Used to allow the Payment Gateway to check the integrity of the transaction request.                                             |
+
+### Response Body
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "The requested operation has been performed successfully.",
+	"pp_Voucher": "210406238600",
+	"pp_SecureHash": "0E8803FDD5C918F31C8ED3171EE8C12C26E6903ED20FC459103E56525FB514E9"
+}
+```
+
+| Parameter              | Description                                                                                                                                       |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"pp_responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"pp_Voucher"`         | A unique value created by the merchant to identify the voucher.                                                                                   |
+| `"pp_SecureHash"`      | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |

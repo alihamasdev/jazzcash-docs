@@ -1,0 +1,37 @@
+---
+title: Hashing Scheme
+description: HMAC-SHA256 data integrity verification and secure hash calculation for request and callback validation.
+---
+
+Secure Hash is used to detect whether a transaction request and response has been tampered with. The Shared Secret generated for merchant at the time of its registration is added to the transaction message and then an HMAC-SHA256 algorithm is applied to generate a secure hash. The secure hash is then sent to the receiving entity with the transaction message. Because the receiving entity is the only other entity apart from transaction initiator that knows the shared secret it recreates the same secure hash and matches it with the one in the request message. If the secure hash matches, the receiving entity continues processing the transaction. If it doesn't match, it assumes that the transaction request has been tampered with and will stop processing the transaction and send back an error message. This is a security feature to secure the transaction and is recommended but it's not mandatory.
+
+On sandbox home screen, an online hash calculation reference has been provided under the Hash Calculator feature so that merchant can also verify the calculated hash.
+
+### How is HMAC-SHA256 calculated?
+
+- The SHA-256 HMAC calculation includes all PP fields, that is, all fields beginning with "PP"
+- All transaction fields are concatenated in alphabetical order of the ASCII value of each field string with `&` after every field except the last field.
+- To this concatenated string, Shared Secret is prepended.
+- This string is first converted into UTF8 bytes and then it is converted into ISO-8859-1 encoding.
+- The ISO-8859-1 string is then hashed using HMAC with UTF-8 encoded Shared Secret as key.
+- The generated hash is then converted into hexadecimal.
+
+### Let us see the example
+
+Consider the following payment parameters and their respective values and assuming the shared secret as `0F5DD14AE2`:
+
+| Parameter       | Sample Values |
+| --------------- | ------------- |
+| `pp_MerchantID` | MER123        |
+| `pp_OrderInfo`  | A48cvE28      |
+| `pp_Amount`     | 2995          |
+
+In ascending alphabetical order and separating each value with `&`, the transaction request fields would be: `2995&MER123&A48cvE28`
+
+After prepending the shared secret to the message, the transaction request fields would be:` 0F5DD14AE2&2995&MER123&A48cvE28`
+
+Now calculating the hash with the hashing scheme `HMAC-SHA256` with the secret key `0F5DD14AE2`
+
+Resultant hash: `c7689cda7474eb1adcd343fd0c0b676bad0ba66361cc46db589bdb0da4c1c867`
+
+Merchant should also ensure that UTF-8 encoding is used to convert the input from a printable string to a byte array. Also Note that 7-bit ASCII encoding is unchanged for UTF-8.

@@ -1,0 +1,164 @@
+---
+title: Bank Accounts
+description: API reference for Direct Debit bank account payments, customer validation, and supported banks retrieval.
+---
+
+Following Bank Account based API's are available with detailed description and relevant information.
+
+## REST based Bank Account Validate Customer API
+
+This is REST based API used to validate customer for the transaction of Bank Account as payment instrument.
+
+### Request Body
+
+```json
+{
+	"pp_MerchantID": "RafayKhan7",
+	"pp_SubMerchantID": "",
+	"pp_Password": "0123456789",
+	"pp_BankID": "11",
+	"pp_TxnRefNo": "T20220217103423",
+	"pp_Amount": "10000",
+	"pp_CNIC": "4210112345678",
+	"pp_AccountNo": "PKSCB4352345234523452345",
+	"pp_MobileNumber": "03412817399",
+	"pp_EmailAddress": "emailemail@gmail.com",
+	"pp_TxnDateTime": "20220217103423",
+	"pp_SecureHash": "a94e1cf4e0ad9d2e9c6987531db52eb508f0d1d9576b499469b16dd41b8bf894"
+}
+```
+
+| Parameter            | Description                                                                                                                      |
+| :------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_MerchantID"`    | Unique Id assigned to each merchant by the payment gateway.                                                                      |
+| `"pp_SubMerchantID"` | Unique Id assigned to each sub merchant by the payment gateway.                                                                  |
+| `"pp_Password"`      | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value. |
+| `"pp_BankID"`        | Bank ID provided by merchant to perform transaction through provided bank.                                                       |
+| `"pp_TxnRefNo"`      | A unique value created by the merchant to identify the transaction.                                                              |
+| `"pp_CNIC"`          | This field will contain Customer's CNIC.                                                                                         |
+| `"pp_AccountNo"`     | This field will contain Bank account number of customer.                                                                         |
+| `"pp_MobileNumber"`  | This field will contain Customer's Mobile Number.                                                                                |
+| `"pp_EmailAddress"`  | This field will contain Customer's email address.                                                                                |
+| `"pp_TxnDateTime"`   | Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.                                |
+| `"pp_SecureHash"`    | Used to allow the Payment Gateway to check the integrity of the transaction request.                                             |
+
+### Response Body
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your operation successfully completed.",
+	"pp_TxnRefNo": "T20220217103423",
+	"pp_SecureHash": "946A3CDE52B733A96CCAA0FB1A3AF8A83F787EC229F73D7551378F2EE1F29276"
+}
+```
+
+| Parameter              | Description                                                                                                                                       |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_ResponseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"pp_ResponseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"pp_TxnRefNo"`        | A unique value created by the merchant to identify the transaction.                                                                               |
+| `"pp_SecureHash"`      | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+
+## REST based Bank Account Payment API
+
+This is REST based API used for the transaction of Bank Account as payment instrument.
+
+### Request Body
+
+```json
+{
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_TxnRefNo": "T20220216140731",
+	"pp_OTP": "123456",
+	"pp_BillReference": "bill Ref",
+	"pp_Currency": "PKR",
+	"pp_Description": "Description",
+	"ppmpf_1": "1",
+	"ppmpf_2": "2",
+	"ppmpf_3": "3",
+	"ppmpf_4": "4",
+	"ppmpf_5": "5",
+	"pp_SecureHash": "128376a8f0317d1768cf94b2d38bee8754b418dc6d6910f8e9c06124f1114c54"
+}
+```
+
+| Parameter            | Description                                                                                                                                                                                                                                                          |
+| :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_MerchantID"`    | Unique Id assigned to each merchant by the payment gateway.                                                                                                                                                                                                          |
+| `"pp_Password"`      | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value.                                                                                                                                     |
+| `"pp_TxnRefNo"`      | A unique value created by the merchant to identify the transaction.                                                                                                                                                                                                  |
+| `"pp_OTP"`           | Value of OTP received by customer to perform Bank Account Transaction.                                                                                                                                                                                               |
+| `"pp_BillReference"` | Bill/invoice Number being settled.                                                                                                                                                                                                                                   |
+| `"pp_TxnCurrency"`   | Currency of transaction amount. It has a fixed value `"PKR"`.                                                                                                                                                                                                        |
+| `"pp_Description"`   | Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters &lt;&gt;\*=%/:'\|"{} are inserted, they will be replaced with a space. |
+| `"ppmpf_#"`          | Optional value provided by merchant to maintain their record.                                                                                                                                                                                                        |
+| `"pp_SecureHash"`    | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                                                                                                 |
+
+### Response Body
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful.",
+	"pp_TxnRefNo": "T20220216140731",
+	"pp_SecureHash": "145067841BC9A8C65D9E00C2C78AD2894672CA266D215992F307C2ADA58FB3AE"
+}
+```
+
+| Parameter              | Description                                                                                                                                       |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_ResponseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"pp_ResponseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"pp_TxnRefNo"`        | A unique value created by the merchant to identify the transaction.                                                                               |
+| `"pp_SecureHash"`      | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
+
+## REST based Bank Account Get Banks API
+
+This is REST based API used to fetch list of avaiable banks to perform bank account transaction
+
+### Request Body
+
+```json
+{
+	"pp_MerchantID": "RafayKhan7",
+	"pp_Password": "0123456789",
+	"pp_SecureHash": "a94e1cf4e0ad9d2e9c6987531db52eb508f0d1d9576b499469b16dd41b8bf894"
+}
+```
+
+| Parameter         | Description                                                                                                                      |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `"pp_MerchantID"` | Unique Id assigned to each merchant by the payment gateway.                                                                      |
+| `"pp_Password"`   | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value. |
+| `"pp_SecureHash"` | Used to allow the Payment Gateway to check the integrity of the transaction request.                                             |
+
+### Response Body
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "The requested operation has been performed successfully.",
+	"pp_Banks": [
+		{
+			"BankCode": "28",
+			"BankName": "Al Baraka"
+		},
+		{
+			"BankCode": "24",
+			"BankName": "Bank Alfalah"
+		},
+		{
+			"BankCode": "11",
+			"BankName": "Demo Bank"
+		}
+	]
+}
+```
+
+| Parameter              | Description                                                                                                                                       |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"pp_ResponseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
+| `"pp_ResponseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
+| `"pp_Banks"`           | This field will contains list of Banks with BankCode and BankName.                                                                                |
