@@ -1,5 +1,5 @@
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { MessageCircleIcon } from "lucide-react";
 
 import { AISearch, AISearchPanel, AISearchTrigger } from "@/components/ai/search";
@@ -8,8 +8,16 @@ import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 
 export default function Layout({ children }: LayoutProps<"/docs">) {
+	const sharedOptions = baseOptions();
+
 	return (
-		<DocsLayout tree={source.getPageTree()} {...baseOptions()}>
+		<DocsLayout
+			tree={source.getPageTree()}
+			{...sharedOptions}
+			nav={{ ...sharedOptions.nav, mode: "top" }}
+			sidebar={{ collapsible: false, prefetch: false }}
+			tabMode="navbar"
+		>
 			<AISearch>
 				<AISearchPanel />
 				<AISearchTrigger
@@ -25,7 +33,6 @@ export default function Layout({ children }: LayoutProps<"/docs">) {
 					Ask AI
 				</AISearchTrigger>
 			</AISearch>
-
 			{children}
 		</DocsLayout>
 	);

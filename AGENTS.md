@@ -1,0 +1,1 @@
+This is clone of official documentation of jazzcash from https://sandbox.jazzcash.com.pk/SandboxDocumentation/v4.2/index.html, we will use the same documentation but make it ai ready with markdown ready, mcp server & skills.

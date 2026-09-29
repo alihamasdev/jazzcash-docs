@@ -1,6 +1,347 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/shadcn.css";
 @import "fumadocs-ui/css/preset.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * The design tokens, in their web form.
+ *
+ * Fumadocs' preset reads the same variable names these define, so redefining
+ * them here retints the entire site — sidebar, code blocks, search — without
+ * overriding a single component.
+ *
+ * `--alpha()` and `color-mix()` are kept exactly as upstream writes them.
+ * `--alpha()` is a Tailwind v4 build-time function, not broken CSS.
+ */
+:root {
+	--radius: 0.625rem;
+
+	--card: var(--color-white);
+	--card-foreground: var(--color-neutral-800);
+
+	--popover: var(--color-white);
+	--popover-foreground: var(--color-neutral-800);
+
+	--overlay: var(--color-white);
+	--overlay-foreground: var(--color-neutral-800);
+
+	/* the sunken band under a card or dialog: black at 3.5% */
+	--inset: --alpha(var(--color-black) / 3.5%);
+
+	/* syntax colours */
+	--code-keyword: #8250df;
+	--code-string: #0a7d55;
+	--code-number: #0550ae;
+	--code-comment: #8b949e;
+	--code-function: #6639ba;
+	--code-property: #953800;
+	--code-punctuation: #57606a;
+	--code-inserted: #0a7d55;
+	--code-deleted: #cf222e;
+
+	--primary: var(--color-neutral-800);
+	--primary-foreground: var(--color-neutral-50);
+
+	--secondary: --alpha(var(--color-black) / 4%);
+	--secondary-foreground: var(--color-neutral-800);
+
+	--muted: --alpha(var(--color-black) / 4%);
+	--muted-foreground: color-mix(in srgb, var(--color-neutral-500) 90%, var(--color-black));
+
+	--accent: --alpha(var(--color-black) / 4%);
+	--accent-foreground: var(--color-neutral-800);
+
+	--destructive: var(--color-red-500);
+	--destructive-foreground: var(--color-red-700);
+	--destructive-solid-foreground: var(--color-neutral-900);
+
+	--info: var(--color-blue-500);
+	--info-foreground: var(--color-blue-700);
+	--info-solid-foreground: var(--color-neutral-900);
+
+	--success: var(--color-emerald-500);
+	--success-foreground: var(--color-emerald-700);
+	--success-solid-foreground: var(--color-neutral-900);
+
+	--warning: var(--color-amber-500);
+	--warning-foreground: var(--color-amber-700);
+	--warning-solid-foreground: var(--color-neutral-900);
+
+	--border: --alpha(var(--color-black) / 8%);
+	--input: --alpha(var(--color-black) / 10%);
+	--ring: var(--color-neutral-400);
+
+	--surface: #f7f7f7;
+	--surface-secondary: #f1f1f1;
+	--surface-tertiary: #eaeaea;
+	--skeleton: --alpha(var(--color-black) / 10%);
+
+	--info-soft: --alpha(var(--info) / 10%);
+	--info-subtle: --alpha(var(--info) / 8%);
+	--success-soft: --alpha(var(--success) / 10%);
+	--success-subtle: --alpha(var(--success) / 8%);
+	--warning-soft: --alpha(var(--warning) / 10%);
+	--warning-subtle: --alpha(var(--warning) / 8%);
+	--destructive-soft: --alpha(var(--destructive) / 10%);
+	--destructive-subtle: --alpha(var(--destructive) / 8%);
+
+	--code: var(--color-white);
+	--code-foreground: var(--foreground);
+	--code-highlight: --alpha(var(--color-black) / 4%);
+	--background: var(--color-white);
+	--foreground: var(--color-neutral-800);
+	--chart-1: var(--color-orange-600);
+	--chart-2: var(--color-teal-600);
+	--chart-3: var(--color-cyan-900);
+	--chart-4: var(--color-amber-400);
+	--chart-5: var(--color-amber-500);
+	--sidebar: var(--color-neutral-50);
+	--sidebar-accent: --alpha(var(--color-black) / 4%);
+	--sidebar-accent-foreground: var(--color-neutral-800);
+	--sidebar-border: --alpha(var(--color-black) / 6%);
+	--sidebar-foreground: color-mix(in srgb, var(--color-neutral-800) 64%, var(--sidebar));
+	--sidebar-primary: var(--color-neutral-800);
+	--sidebar-primary-foreground: var(--color-neutral-50);
+	--sidebar-ring: var(--color-neutral-400);
+}
+
+.dark {
+	--background: color-mix(in srgb, var(--color-neutral-950) 95%, var(--color-white));
+	--foreground: var(--color-neutral-100);
+
+	--card: color-mix(in srgb, var(--background) 98%, var(--color-white));
+	--card-foreground: var(--color-neutral-100);
+
+	--popover: color-mix(in srgb, var(--background) 98%, var(--color-white));
+	--popover-foreground: var(--color-neutral-100);
+
+	--overlay: color-mix(in srgb, var(--background) 92%, var(--color-white));
+	--overlay-foreground: var(--color-neutral-100);
+
+	/* the sunken band under a card or dialog: black at 22% */
+	--inset: --alpha(var(--color-black) / 22%);
+
+	/* syntax colours */
+	--code-keyword: #d2a8ff;
+	--code-string: #7ee787;
+	--code-number: #79c0ff;
+	--code-comment: #8b949e;
+	--code-function: #d2a8ff;
+	--code-property: #ffa657;
+	--code-punctuation: #8b949e;
+	--code-inserted: #7ee787;
+	--code-deleted: #ff7b72;
+
+	--primary: var(--color-neutral-100);
+	--primary-foreground: var(--color-neutral-800);
+
+	--secondary: --alpha(var(--color-white) / 4%);
+	--secondary-foreground: var(--color-neutral-100);
+
+	--muted: --alpha(var(--color-white) / 4%);
+	--muted-foreground: color-mix(in srgb, var(--color-neutral-500) 86%, var(--color-white));
+
+	--accent: --alpha(var(--color-white) / 4%);
+	--accent-foreground: var(--color-neutral-100);
+
+	--destructive: color-mix(in srgb, var(--color-red-500) 90%, var(--color-white));
+	--destructive-foreground: var(--color-red-400);
+	--destructive-solid-foreground: var(--color-neutral-900);
+
+	--info: var(--color-blue-500);
+	--info-foreground: var(--color-blue-400);
+	--info-solid-foreground: var(--color-neutral-900);
+
+	--success: var(--color-emerald-500);
+	--success-foreground: var(--color-emerald-400);
+	--success-solid-foreground: var(--color-neutral-900);
+
+	--warning: var(--color-amber-500);
+	--warning-foreground: var(--color-amber-400);
+	--warning-solid-foreground: var(--color-neutral-900);
+
+	--border: --alpha(var(--color-white) / 6%);
+	--input: --alpha(var(--color-white) / 8%);
+	--ring: var(--color-neutral-500);
+
+	--surface: #1c1c1c;
+	--surface-secondary: #222222;
+	--surface-tertiary: #282828;
+	--skeleton: --alpha(var(--color-white) / 13%);
+
+	--info-soft: --alpha(var(--info) / 6%);
+	--info-subtle: --alpha(var(--info) / 16%);
+	--success-soft: --alpha(var(--success) / 6%);
+	--success-subtle: --alpha(var(--success) / 16%);
+	--warning-soft: --alpha(var(--warning) / 6%);
+	--warning-subtle: --alpha(var(--warning) / 16%);
+	--destructive-soft: --alpha(var(--destructive) / 6%);
+	--destructive-subtle: --alpha(var(--destructive) / 16%);
+
+	--code: color-mix(in srgb, var(--background) 98%, var(--color-white));
+	--code-foreground: var(--foreground);
+	--code-highlight: --alpha(var(--color-white) / 4%);
+	--chart-1: var(--color-blue-700);
+	--chart-2: var(--color-emerald-500);
+	--chart-3: var(--color-amber-500);
+	--chart-4: var(--color-purple-500);
+	--chart-5: var(--color-rose-500);
+	--sidebar: color-mix(in srgb, var(--color-neutral-950) 97%, var(--color-white));
+	--sidebar-accent: --alpha(var(--color-white) / 4%);
+	--sidebar-accent-foreground: var(--color-neutral-100);
+	--sidebar-border: --alpha(var(--color-white) / 5%);
+	--sidebar-foreground: color-mix(in srgb, var(--color-neutral-100) 64%, var(--sidebar));
+	--sidebar-primary: var(--color-neutral-100);
+	--sidebar-primary-foreground: var(--color-neutral-800);
+	--sidebar-ring: var(--color-neutral-400);
+}
+
+/*
+ * Map the variables onto Tailwind's colour namespace
+ */
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-overlay: var(--overlay);
+	--color-overlay-foreground: var(--overlay-foreground);
+	--color-inset: var(--inset);
+	--color-code-keyword: var(--code-keyword);
+	--color-code-string: var(--code-string);
+	--color-code-number: var(--code-number);
+	--color-code-comment: var(--code-comment);
+	--color-code-function: var(--code-function);
+	--color-code-property: var(--code-property);
+	--color-code-punctuation: var(--code-punctuation);
+	--color-code-inserted: var(--code-inserted);
+	--color-code-deleted: var(--code-deleted);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-destructive-solid-foreground: var(--destructive-solid-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-info-solid-foreground: var(--info-solid-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-success-solid-foreground: var(--success-solid-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-warning-solid-foreground: var(--warning-solid-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-surface: var(--surface);
+	--color-surface-secondary: var(--surface-secondary);
+	--color-surface-tertiary: var(--surface-tertiary);
+	--color-skeleton: var(--skeleton);
+	--color-info-soft: var(--info-soft);
+	--color-info-subtle: var(--info-subtle);
+	--color-success-soft: var(--success-soft);
+	--color-success-subtle: var(--success-subtle);
+	--color-warning-soft: var(--warning-soft);
+	--color-warning-subtle: var(--warning-subtle);
+	--color-destructive-soft: var(--destructive-soft);
+	--color-destructive-subtle: var(--destructive-subtle);
+
+	--font-heading: var(--font-heading);
+	--font-mono: var(--font-mono);
+	--font-sans: var(--font-sans);
+
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar: var(--sidebar);
+	--color-code-highlight: var(--code-highlight);
+	--code-foreground: var(--code-foreground);
+	--color-code: var(--code);
+	--color-chart-5: var(--chart-5);
+	--color-chart-4: var(--chart-4);
+	--color-chart-3: var(--chart-3);
+	--color-chart-2: var(--chart-2);
+	--color-chart-1: var(--chart-1);
+}
+
+body {
+	position: relative;
+}
+
+/*
+ * Sidebar, styled to the reference: two quiet group headings over flat lists,
+ * with the active item a filled rounded rectangle rather than a tinted accent
+ * bar. Fumadocs ships the structure; these override only its colour choices.
+ */
+#nd-sidebar {
+	/* Group headings */
+	& p {
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: var(--muted-foreground);
+		margin-top: 1.75rem;
+		margin-bottom: 0.375rem;
+	}
+
+	/* Items. Legible at rest, not washed out to muted. */
+	& a[data-active] {
+		color: color-mix(in srgb, var(--foreground) 78%, transparent);
+		font-weight: 400;
+	}
+
+	& a[data-active]:hover {
+		color: var(--foreground);
+		background-color: var(--accent);
+	}
+
+	/* Active: a solid fill, matching the reference rather than Fumadocs'
+	   primary tint. */
+	& a[data-active="true"],
+	& a[data-active="true"]:hover {
+		background-color: var(--secondary);
+		color: var(--foreground);
+		font-weight: 500;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: var(--font-mono);
+	}
+	html {
+		@apply font-sans;
+	}
+}
 
 html {
 	scrollbar-gutter: stable;
