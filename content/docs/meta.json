@@ -11,6 +11,10 @@
 		"---API Reference---",
 		"...api",
 		"---Features---",
-		"...features"
+		"...features",
+		"---AI & Agents---",
+		"mcp-server",
+		"[llms.txt](/llms.txt)",
+		"[llms-full.txt](/llms-full.txt)"
 	]
 }

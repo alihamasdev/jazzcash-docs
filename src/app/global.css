@@ -17,6 +17,13 @@
 :root {
 	--radius: 0.625rem;
 
+	/* User system monospace font stack */
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+	/* Fumadocs font bindings */
+	--default-font-family: var(--font-sans);
+	--default-mono-font-family: var(--font-mono);
+
 	--card: var(--color-white);
 	--card-foreground: var(--color-neutral-800);
 
@@ -255,9 +262,9 @@
 	--color-destructive-soft: var(--destructive-soft);
 	--color-destructive-subtle: var(--destructive-subtle);
 
-	--font-heading: var(--font-heading);
+	--font-heading: var(--font-heading, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
 	--font-mono: var(--font-mono);
-	--font-sans: var(--font-sans);
+	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
@@ -329,17 +336,27 @@ body {
 	* {
 		@apply border-border outline-ring/50;
 	}
+	html,
 	body {
+		font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 		@apply bg-background text-foreground;
+	}
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	.font-heading {
+		font-family: var(--font-heading, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
 	}
 	code,
 	kbd,
 	samp,
-	pre {
-		font-family: var(--font-mono);
-	}
-	html {
-		@apply font-sans;
+	pre,
+	pre code,
+	.font-mono {
+		font-family: var(--font-mono) !important;
 	}
 }
 

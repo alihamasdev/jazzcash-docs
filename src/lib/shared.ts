@@ -1,6 +1,15 @@
 import { createGetUrl } from "fumadocs-core/source";
 
 export const appName = "JazzCash";
+export const defaultDomain = "jazzcash.vercel.app";
+export const customDomain = "jazzcash.alihamas.pk";
+
+export const siteUrl =
+	process.env.NEXT_PUBLIC_SITE_URL ||
+	(process.env.VERCEL_PROJECT_PRODUCTION_URL
+		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+		: `https://${customDomain || defaultDomain}`);
+
 export const docsRoute = "/docs";
 export const docsImageRoute = "/og/docs";
 export const docsContentRoute = "/llms.mdx/docs";

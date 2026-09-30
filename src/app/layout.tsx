@@ -1,31 +1,36 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
-import { Roboto, Roboto_Mono } from "next/font/google";
+import { type Metadata } from "next";
+import { Outfit } from "next/font/google";
 
 import { cn } from "@/lib/cn";
+import { appName, siteUrl } from "@/lib/shared";
 
 import "./global.css";
 
-const roboto = Roboto({
+export const metadata: Metadata = {
+	metadataBase: new URL(siteUrl),
+	title: {
+		default: `${appName} Documentation`,
+		template: `%s - ${appName}`,
+	},
+	description: "Modern, AI-ready developer documentation for the JazzCash Payment Gateway (v4.2).",
+};
+
+const outfit = Outfit({
 	subsets: ["latin"],
-	weight: ["300", "400", "500", "700"],
 	variable: "--font-sans",
+	display: "swap",
 });
 
-const robotoHeading = Roboto({
+const outfitHeading = Outfit({
 	subsets: ["latin"],
-	weight: ["400", "500", "700", "900"],
 	variable: "--font-heading",
-});
-
-const robotoMono = Roboto_Mono({
-	subsets: ["latin"],
-	weight: ["400", "500", "700"],
-	variable: "--font-mono",
+	display: "swap",
 });
 
 export default function Layout({ children }: LayoutProps<"/">) {
 	return (
-		<html lang="en" className={cn(roboto.variable, robotoHeading.variable, robotoMono.variable)} suppressHydrationWarning>
+		<html lang="en" className={cn(outfit.variable, outfitHeading.variable)} suppressHydrationWarning>
 			<body className="isolate flex min-h-dvh flex-col font-sans antialiased">
 				<RootProvider>{children}</RootProvider>
 			</body>

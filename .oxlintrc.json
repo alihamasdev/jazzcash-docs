@@ -4,6 +4,9 @@
 	"categories": {
 		"correctness": "warn"
 	},
+	"rules": {
+		"nextjs/no-img-element": "off"
+	},
 	"env": {
 		"builtin": true
 	},

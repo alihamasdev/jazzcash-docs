@@ -1,0 +1,154 @@
+---
+title: MCP Server
+description: Connect AI coding assistants and agents directly to JazzCash documentation via the Model Context Protocol (MCP) server.
+---
+
+The **Model Context Protocol (MCP)** server allows AI coding assistants (such as Cursor, Windsurf, Claude Desktop, Antigravity, and Roo Code) to query, search, and retrieve official JazzCash integration guidelines, API parameters, and code recipes in real time.
+
+Instead of relying on out-of-date model training weights or hallucinated payment request formats, AI agents connected to this server can inspect the latest v4.2 specifications directly inside your editor.
+
+<Callout type="info" title="Streamable HTTP Transport">
+	This MCP server is hosted as a serverless Route Handler at `/api/mcp` using the modern streamable HTTP transport. No local binary
+	installation is required, simply point your AI client to the endpoint URL.
+</Callout>
+
+---
+
+## Server Endpoint
+
+| Property              | Value                                     |
+| :-------------------- | :---------------------------------------- |
+| **Endpoint URL**      | `https://jazzcash.alihamas.pk/api/mcp`    |
+| **Local Development** | `http://localhost:3000/api/mcp`           |
+| **Transport**         | Streamable HTTP (`POST`, `GET`, `DELETE`) |
+| **Protocol Version**  | MCP `2024-11-05` / LATEST                 |
+
+---
+
+## Available MCP Tools
+
+When your AI assistant connects to the server, it is automatically equipped with three specialized tools:
+
+### 1. `list_pages`
+
+Lists all available documentation pages, including guides, API endpoints, feature specifications, and their corresponding URLs.
+
+- **Inputs**: None
+- **Output**: The complete structured index from `llms.txt`.
+
+### 2. `get_page`
+
+Retrieves the full, token-optimized Markdown content of a specific documentation page.
+
+- **Inputs**:
+  - `url` _(string, required)_: The pathname of the page (for example, `/docs/api/cards` or `/docs/features/hashing-scheme`).
+- **Output**: Clean Markdown containing parameter tables, curl examples, and validation rules.
+
+### 3. `search`
+
+Performs full-text fuzzy search across all documentation topics and code samples.
+
+- **Inputs**:
+  - `query` _(string, required)_: Search query string (e.g., `"pp_SecureHash"`, `"MWALLET"`, `"Refund"`).
+  - `locale` _(string, optional)_: Language locale (defaults to English).
+- **Output**: JSON array of matching sections, titles, and excerpts.
+
+---
+
+## Client Setup Guides
+
+### 1. Cursor
+
+To connect Cursor to the JazzCash documentation MCP server:
+
+1. Open **Cursor Settings** (`Cmd + ,` or `Ctrl + ,`).
+2. Navigate to **Features** > **MCP Servers**.
+3. Click **Add New MCP Server**.
+4. Set the Type to **SSE** or **HTTP**:
+   - **Name**: `jazzcash-docs`
+   - **Server URL**: `https://jazzcash.alihamas.pk/api/mcp` (or `http://localhost:3000/api/mcp` for local testing)
+
+Alternatively, add it directly to your project's `.cursor/mcp.json`:
+
+```json title=".cursor/mcp.json"
+{
+	"mcpServers": {
+		"jazzcash-docs": {
+			"url": "https://jazzcash.alihamas.pk/api/mcp"
+		}
+	}
+}
+```
+
+---
+
+### 2. Claude Desktop
+
+For clients that connect via command-line bridges, you can use `mcp-remote` to proxy requests to the HTTP server:
+
+Add the following to your `claude_desktop_config.json`:
+
+```json title="claude_desktop_config.json"
+{
+	"mcpServers": {
+		"jazzcash-docs": {
+			"command": "npx",
+			"args": ["-y", "mcp-remote", "https://jazzcash.alihamas.pk/api/mcp"]
+		}
+	}
+}
+```
+
+---
+
+### 3. Windsurf & Antigravity
+
+In your Windsurf or Antigravity configuration file (e.g. `~/.codeium/windsurf/mcp_config.json` or project MCP settings):
+
+```json title="mcp_config.json"
+{
+	"mcpServers": {
+		"jazzcash-docs": {
+			"url": "https://jazzcash.alihamas.pk/api/mcp"
+		}
+	}
+}
+```
+
+---
+
+## Example Prompts for Your AI Assistant
+
+Once connected, your AI assistant will autonomously call the tools whenever you ask questions about JazzCash:
+
+- _"How do I generate the `pp_SecureHash` for a JazzCash checkout in Node.js? Use the docs tool to check the hash sequence."_
+- _"Look up the required parameters for the JazzCash Mobile Wallet API and create an Express handler."_
+- _"What does JazzCash response code `124` mean, and what actions should the merchant take?"_
+- _"Search the documentation for card tokenization and show me the ITN webhook payload format."_
+
+---
+
+## Testing the Endpoint Manually
+
+You can test the MCP endpoint using `curl` to send a JSON-RPC initialize request:
+
+```bash
+curl -X POST https://jazzcash.alihamas.pk/api/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: text/event-stream, application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list",
+    "params": {}
+  }'
+```
+
+---
+
+## Related AI Endpoints
+
+In addition to the interactive MCP server, you can also feed static context to LLMs using our standardized text feeds:
+
+- **[`/llms.txt`](/llms.txt)**: Concise directory of all pages with descriptions for fast discovery.
+- **[`/llms-full.txt`](/llms-full.txt)**: Complete consolidated documentation in one file for custom GPTs, Claude projects, or system prompts.

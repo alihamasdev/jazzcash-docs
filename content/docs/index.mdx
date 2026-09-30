@@ -1,4 +1,81 @@
 ---
 title: Introduction
-description: Overview of JazzCash Payment Gateway, integration capabilities, and developer sandbox environment.
+description: Modern, AI-ready developer documentation for the JazzCash Payment Gateway (v4.2) and the open-source rawapay Node.js SDK.
 ---
+
+<Callout type="warn" title="Disclaimer: Unofficial Community Documentation">
+	This website is an **independent, community-driven clone and modernization** of the official [JazzCash Sandbox Documentation
+	v4.2](https://sandbox.jazzcash.com.pk/SandboxDocumentation/v4.2/index.html). It is **not** an official documentation portal of JazzCash,
+	Jazz (VEON), or Mobilink Microfinance Bank. All trademarks, service marks, brand names, and logos belong to their respective owners.
+</Callout>
+
+## About Me & The Story Behind This Project
+
+Hi, I'm **Ali Hamas** ([@alihamasdev](https://github.com/alihamasdev)), a full-stack software engineer who regularly builds web applications and e-commerce platforms using **Next.js**, **React**, **Node.js**, and **Express**.
+
+While developing an e-commerce website for a client, I needed to integrate the JazzCash payment gateway to accept local payments in Pakistan (including Mobile Wallets, Credit/Debit Cards, and Vouchers). When I searched for developer tooling, I ran into a major obstacle: **there was no modern, maintained, type-safe Node.js SDK for JazzCash**.
+
+Integrating the gateway manually meant calculating HMAC-SHA256 integrity hashes, sorting request fields, handling multi-step redirect forms, and parsing server-to-server webhook callbacks from scratch without type definitions or modern runtime helpers.
+
+To solve this for myself and the wider developer community, I created and open-sourced **`rawapay`**:
+
+- **GitHub Repository**: [github.com/alihamasdev/rawapay](https://github.com/alihamasdev/rawapay)
+- **npm Package**: [`rawapay`](https://www.npmjs.com/package/rawapay)
+
+`rawapay` provides a developer-friendly, zero-friction Node.js and TypeScript library for initiating payments, computing secure hashes, tokenizing cards, and handling webhook responses across Next.js API routes, Express servers, and serverless environments.
+
+## Why Rebuild the JazzCash Documentation?
+
+While building `rawapay`, I spent countless hours consulting the official [JazzCash Sandbox Documentation v4.2](https://sandbox.jazzcash.com.pk/SandboxDocumentation/v4.2/index.html). While the underlying gateway specifications are functional, the documentation experience felt stuck in the past:
+
+- **Legacy HTML Structure**: Nested frames, non-responsive tables, and static layouts make navigation clunky on modern monitors and mobile devices.
+- **No Markdown or Developer Experience**: No copy-to-clipboard code blocks, dark mode, or fast client-side fuzzy search.
+- **Not AI-Ready**: Today's developers build alongside AI pair programmers and agentic coding workflows (such as Cursor, Windsurf, Claude Desktop, Antigravity, and GitHub Copilot). Legacy HTML documentation cannot be cleanly digested or referenced by Large Language Models (LLMs) without significant noise and truncation.
+
+I decided to recreate the complete JazzCash v4.2 documentation from the ground up as a modern, high-performance, developer-first platform.
+
+## What Makes This Documentation AI-Ready?
+
+This portal isn't just a visual redesign; it is engineered from the core to seamlessly empower both human developers and autonomous AI coding agents:
+
+<Cards>
+	<Card title="Clean Markdown & MDX" href="/docs/getting-started">
+		Every page is structured in clean, semantic Markdown with interactive components, parameter tables, and copyable payloads.
+	</Card>
+	<Card title="Model Context Protocol (MCP)" href="/docs/mcp-server">
+		Compatible with MCP servers and agent skills, enabling coding assistants to query JazzCash endpoints, verify hash algorithms, and look
+		up response codes in real time.
+	</Card>
+	<Card title="llms.txt Endpoint" href="/llms.txt">
+		A standardized `/llms.txt` index file optimized for LLMs to discover all available payment modes, APIs, and guides with minimal token
+		overhead.
+	</Card>
+	<Card title="llms-full.txt Endpoint" href="/llms-full.txt">
+		A complete bundled documentation feed at `/llms-full.txt` containing all guides, schemas, and API references ready for one-shot agent
+		ingestion.
+	</Card>
+</Cards>
+
+### Accessing Raw Markdown
+
+Every page on this site includes a **Copy Markdown** button in the header. You can also fetch the raw Markdown directly by visiting `/llms.mdx/docs/[slug]/content.md`, making it easy to paste specific documentation sections into AI prompts or context windows.
+
+## How AI Coding Agents Can Use This Site
+
+You can point your favorite AI tools directly at this documentation:
+
+- **Cursor / Windsurf**: Add `@https://jazzcash.alihamas.pk/llms.txt` or paste the `https://jazzcash.alihamas.pk/llms-full.txt` link into your agent rules.
+- **Claude Projects / Custom GPTs**: Download or reference `https://jazzcash.alihamas.pk/llms-full.txt` as a project knowledge source to give your assistant complete knowledge of JazzCash v4.2 parameters, response codes, and hash generation rules.
+- **Terminal & Scripts**: Ingest markdown directly using `curl`:
+  ```bash
+  curl -s https://jazzcash.alihamas.pk/llms.txt
+  ```
+
+## Open Source & Contributions
+
+This documentation project is open-source and welcomes contributions from fellow developers. If you find any discrepancies, broken links, or outdated parameters:
+
+- **Documentation Repository**: [github.com/alihamasdev/jazzcash-docs](https://github.com/alihamasdev/jazzcash-docs)
+- **SDK Repository**: [github.com/alihamasdev/rawapay](https://github.com/alihamasdev/rawapay)
+
+Star the repositories if you find them helpful, and feel free to submit pull requests or open issues!

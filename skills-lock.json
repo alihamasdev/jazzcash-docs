@@ -1,0 +1,11 @@
+{
+	"version": 1,
+	"skills": {
+		"vercel-doctor": {
+			"source": "aniket-508/vercel-doctor",
+			"sourceType": "github",
+			"skillPath": "skills/vercel-doctor/SKILL.md",
+			"computedHash": "9385d98981f262540dae7d593196a6c603293f98340d5ae3f65010de2a024838"
+		}
+	}
+}
