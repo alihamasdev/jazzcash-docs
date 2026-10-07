@@ -1,0 +1,4 @@
+{
+	"title": "Bank Accounts",
+	"pages": ["bankValidateCustomer", "bankAccountPayment", "bankGetAvailableBanks"]
+}

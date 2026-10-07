@@ -1,0 +1,3876 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "JazzCash Payment Gateway API",
+		"description": "Comprehensive OpenAPI 3.1 specification for the JazzCash Payment Gateway (Sandbox & Production), covering Credit/Debit Cards (MPGS 3DS 2.0), Mobile Wallets, Vouchers (Over-The-Counter), Direct Bank Accounts, Tokenization, and Refunds.",
+		"version": "2.0.0",
+		"contact": {
+			"name": "JazzCash Developer Support",
+			"url": "https://sandbox.jazzcash.com.pk"
+		}
+	},
+	"servers": [
+		{
+			"url": "https://sandbox.jazzcash.com.pk/ApplicationAPI/API",
+			"description": "JazzCash Sandbox Environment"
+		},
+		{
+			"url": "https://payments.jazzcash.com.pk/ApplicationAPI/API",
+			"description": "JazzCash Production Environment"
+		}
+	],
+	"tags": [
+		{
+			"name": "Cards",
+			"description": "Credit and Debit card operations including 3DS2 authentication enrollment, payer authentication, direct pay, authorization, capture, and retrieval."
+		},
+		{
+			"name": "Mobile Wallet",
+			"description": "JazzCash Mobile Account payment flows across Default `v1.0`, CNIC Enabled `v2.0`, Hosted MPIN `v3.0`, and Recurring `v4.0`."
+		},
+		{
+			"name": "Vouchers",
+			"description": "Over-The-Counter (OTC) cash vouchers and voucher expiration."
+		},
+		{
+			"name": "Bank Accounts",
+			"description": "Direct bank account customer validation, OTP verification, and bank listing."
+		},
+		{
+			"name": "Refund",
+			"description": "Transaction refund APIs for Mobile Accounts, Cards, and Vouchers."
+		},
+		{
+			"name": "Tokenization",
+			"description": "MPGS card token lifecycle management including retrieve, inquiry, update, and deletion."
+		}
+	],
+	"paths": {
+		"/Payment/DoTransaction": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Initiate Authentication",
+				"operationId": "cardsInitiateAuthentication",
+				"description": "This is a request to check a cardholder's enrollment in the initiate authentication scheme with Raw Card or Token.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"oneOf": [
+									{
+										"$ref": "#/components/schemas/CardsInitiateAuthRequest"
+									},
+									{
+										"$ref": "#/components/schemas/CardsInitiateAuthViaTokenRequest"
+									}
+								],
+								"title": "Initiate Authentication Payload"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsInitiateAuthResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Payment/DoTransaction/AuthenticatePayer": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Authenticate Payer",
+				"operationId": "cardsAuthenticatePayer",
+				"description": "Request to authenticate a payer, i.e. verify the identity of a cardholder.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"oneOf": [
+									{
+										"$ref": "#/components/schemas/CardsAuthenticatePayerRequest"
+									},
+									{
+										"$ref": "#/components/schemas/CardsAuthenticatePayerViaTokenRequest"
+									}
+								],
+								"title": "Authenticate Payer Payload"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsAuthenticatePayerResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Payment/DoTransaction/DirectPay": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Direct Pay",
+				"operationId": "cardsDirectPay",
+				"description": "This is a single transaction to authorize payment and transfer funds from payer's account to merchant\u2019s account.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"oneOf": [
+									{
+										"$ref": "#/components/schemas/CardsDirectPayRequest"
+									},
+									{
+										"$ref": "#/components/schemas/CardsDirectPayViaTokenRequest"
+									}
+								],
+								"title": "Direct Pay Payload"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsDirectPayResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Payment/DoTransaction/Authorize": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Authorize Card",
+				"operationId": "cardsAuthorize",
+				"description": "This is a request to obtain an authorization for a proposed funds transfer. An authorization is a response from a financial institution indicating that payment information is valid and funds are available in the payer's account.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"oneOf": [
+									{
+										"$ref": "#/components/schemas/CardsAuthorizeRequest"
+									},
+									{
+										"$ref": "#/components/schemas/CardsAuthorizeViaTokenRequest"
+									}
+								],
+								"title": "Authorize Card Payload"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsAuthorizeResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Payment/DoTransaction/Capture": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Capture Card",
+				"operationId": "cardsCapture",
+				"description": "This is a request to capture funds previously reserved by an authorization. A Capture transaction triggers the movement of funds from the payer's account to the merchant's account.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CardsCaptureRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsCaptureResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Payment/DoTransaction/Retrieve": {
+			"post": {
+				"tags": ["Cards"],
+				"summary": "Retrieve Order & Transactions",
+				"operationId": "cardsRetrieveOrder",
+				"description": "This is a request to retrieve the details of an order and all transactions associated with this order.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CardsRetrieveRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CardsRetrieveResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/DoMWalletTransaction": {
+			"post": {
+				"tags": ["Mobile Wallet"],
+				"summary": "v1 - Default",
+				"operationId": "mobileWalletV1",
+				"description": "This is REST based API used for the transaction of Mobile Account as a payment instrument.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MobileWalletV1Request"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MobileWalletV1Response"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/DoMWalletTransaction/CNIC": {
+			"post": {
+				"tags": ["Mobile Wallet"],
+				"summary": "v2 - CNIC Enabled",
+				"operationId": "mobileWalletPayV2CNIC",
+				"description": "CNIC enabled mobile wallet payments",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MobileWalletV2CNICRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MobileWalletV2CNICResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/DoMWalletTransaction/HostedMPIN": {
+			"post": {
+				"tags": ["Mobile Wallet"],
+				"summary": "v3 - Hosted MPIN",
+				"operationId": "mobileWalletPayV3HostedMPIN",
+				"description": "Hosted MPIN mobile wallet payments",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MobileWalletV3MPINRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MobileWalletV3MPINResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/DoMWalletTransaction/Recurring": {
+			"post": {
+				"tags": ["Mobile Wallet"],
+				"summary": "v4 - Recurring Payments",
+				"operationId": "mobileWalletPayV4Recurring",
+				"description": "Recurring mobile wallet payments",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MobileWalletV4RecurringRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MobileWalletV4RecurringResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/DoVoucherTransaction": {
+			"post": {
+				"tags": ["Vouchers"],
+				"summary": "Voucher Payment",
+				"operationId": "vouchersCreatePayment",
+				"description": "This is REST based API used for the transaction of Voucher as payment instrument.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VoucherPaymentRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VoucherPaymentResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/ExpireVoucher": {
+			"post": {
+				"tags": ["Vouchers"],
+				"summary": "Voucher Expiry",
+				"operationId": "vouchersExpire",
+				"description": "This API is used to expire the given voucher on merchant's consent",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VoucherExpireRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VoucherExpireResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Bank/ValidateCustomer": {
+			"post": {
+				"tags": ["Bank Accounts"],
+				"summary": "Validate Account",
+				"operationId": "bankValidateCustomer",
+				"description": "This is REST based API used to validate customer for the transaction of Bank Account as payment instrument.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BankValidateCustomerRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BankValidateCustomerResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Bank/DoTransaction": {
+			"post": {
+				"tags": ["Bank Accounts"],
+				"summary": "Initiate Payment",
+				"operationId": "bankAccountPayment",
+				"description": "This is REST based API used for the transaction of Bank Account as payment instrument.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BankAccountPaymentRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BankAccountPaymentResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Bank/GetBanks": {
+			"post": {
+				"tags": ["Bank Accounts"],
+				"summary": "Get Banks",
+				"operationId": "bankGetAvailableBanks",
+				"description": "This is REST based API used to fetch list of avaiable banks to perform bank account transaction",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BankGetBanksRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BankGetBanksResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Refund/MobileAccount": {
+			"post": {
+				"tags": ["Refund"],
+				"summary": "Mobile Account Refund",
+				"operationId": "refundMobileAccount",
+				"description": "This is a request for refund transaction of mobile account.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefundMobileAccountRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RefundMobileAccountResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Refund/Card": {
+			"post": {
+				"tags": ["Refund"],
+				"summary": "Card Payment Refund",
+				"operationId": "refundCard",
+				"description": "This is a request for refund transaction of direct pay.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefundCardRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RefundCardResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/2.0/Purchase/Refund/Voucher": {
+			"post": {
+				"tags": ["Refund"],
+				"summary": "Voucher Refund",
+				"operationId": "refundVoucher",
+				"description": "This is a request for refund transaction of Voucher.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefundVoucherRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RefundVoucherResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Token/Retrieve": {
+			"post": {
+				"tags": ["Tokenization"],
+				"summary": "Retrieve Token",
+				"operationId": "tokenRetrieve",
+				"description": "This is a request to retrieve the card details based on given token, which was previously provided to the user while user was asked to save their card details during performing the card transaction.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TokenRetrieveRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenRetrieveResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Token/Delete": {
+			"post": {
+				"tags": ["Tokenization"],
+				"summary": "Delete Token",
+				"operationId": "tokenDelete",
+				"description": "This is a request to delete the card details based on given token which was previously provided to the user while user was asked to save their card details during performing the card transaction.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TokenDeleteRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenDeleteResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Token/Inquire": {
+			"post": {
+				"tags": ["Tokenization"],
+				"summary": "Inquire Token",
+				"operationId": "tokenInquire",
+				"description": "This is a request to fetch the token based on the given transaction reference number. The fetched token is the one which was previously provided to the user while user was asked to save their card details during performing the card transaction of the provided Transaction reference number.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TokenInquireRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenInquireResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Token/Update": {
+			"post": {
+				"tags": ["Tokenization"],
+				"summary": "Update Token",
+				"operationId": "tokenUpdate",
+				"description": "This request will update expiry of saved token against the provided field of TokenizedCardNumber.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TokenUpdateRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation response from JazzCash Payment Gateway",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenUpdateResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CardsInitiateAuthRequest": {
+				"type": "object",
+				"title": "Raw Card",
+				"properties": {
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version.",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It will generate token against the given card details.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20221125153218"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20221125153215"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20221202153215"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description of transaction"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment.",
+						"examples": ["5123456789012346"]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "Represent the usage mode that is API:Initiate Authentication From API PR:Initiate Authentication From PR (Page Redirection Or Landing Page)",
+						"examples": ["API"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsInitiateAuthViaTokenRequest": {
+				"type": "object",
+				"title": "Saved Token",
+				"properties": {
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version.",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It will generate token against the given card details.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20221125153224"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20221125153215"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20221202153215"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description of transaction"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "It represents the token for returning customer against their already saved card.",
+						"examples": ["9228924639592086"]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "Represent the usage mode that is API:Initiate Authentication With Token From API PR:Initiate Authentication With Token From PR (Page Redirection Or Landing Page)",
+						"examples": ["API"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsInitiateAuthResponse": {
+				"type": "object",
+				"title": "Initiate Authentication Response",
+				"properties": {
+					"authenticationStatus": {
+						"type": "string",
+						"description": "If user is egligible for authentication or not.",
+						"examples": ["AUTHENTICATION_SUCCESSFUL"]
+					},
+					"status": {
+						"type": "string",
+						"description": "Status receive in case of success and failure.",
+						"examples": ["SUCCESS"]
+					},
+					"gatewayRecommendation": {
+						"type": "string",
+						"description": "Gateway Recommedation represent if customer can proceed or not.",
+						"examples": ["PROCEED"]
+					},
+					"html": {
+						"type": "string",
+						"examples": ["<div id=\\\"threedsFrictionLessRedirect\\\" xmlns=\\\"http://www.w3.org/1999/html\\\">"]
+					},
+					"http": {
+						"type": "string",
+						"examples": ["//localhost/MerchantSimulator/merchant/testview\\"]
+					},
+					"secureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"CardsAuthenticatePayerRequest": {
+				"type": "object",
+				"title": "Raw Card",
+				"properties": {
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version.",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20221127183304"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique code assigned to each Merchant by PG.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Password assigned to each merchant and is used to authenticate merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_3DS2ReturnURL": {
+						"type": "string",
+						"description": "Merchant return URL after OTP verification.",
+						"examples": ["http://localhost/MerchantSimulator/merchant/testview"]
+					},
+					"pp_browser": {
+						"type": "string",
+						"description": "The User-Agent header of the browser the customer used to place the order",
+						"examples": ["MOZILLA"]
+					},
+					"pp_3DSecureChallengeWindowSize": {
+						"type": "string",
+						"description": "Dimensions of the challenge window (in width x height in pixels) displayed to the payer during 3D-Secure authentication.",
+						"examples": ["FULL_SCREEN"]
+					},
+					"pp_acceptHeaders": {
+						"type": "string",
+						"description": "The content of the Accept request-header field as sent from the payer's browser.",
+						"examples": ["application/json"]
+					},
+					"pp_colorDepth": {
+						"type": "string",
+						"description": "The bit depth (in bits per pixel) of the color palette for displaying images.",
+						"examples": ["24"]
+					},
+					"pp_javaEnabled": {
+						"type": "string",
+						"description": "Indicates whether or not the payer's browser supports Java.",
+						"examples": ["true"]
+					},
+					"pp_language": {
+						"type": "string",
+						"description": "The language supported for the payer's browser.",
+						"examples": ["en-US"]
+					},
+					"pp_screenHeight": {
+						"type": "string",
+						"description": "The total height of the payer's browser screen in pixels.",
+						"examples": ["640"]
+					},
+					"pp_screenWidth": {
+						"type": "string",
+						"description": "The total width of the payer's browser screen in pixels.",
+						"examples": ["480"]
+					},
+					"pp_timeZone": {
+						"type": "string",
+						"description": "Time difference between UTC time and the Cardholder browser local time, in minutes.",
+						"examples": ["273"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment. It should be of maximum 16 numeric digits.",
+						"examples": ["5123456789012346"]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": ["12/22"]
+					},
+					"pp_CustomerCardCvv": {
+						"type": "string",
+						"description": "Card verification value, as printed on the back or front of the card.",
+						"examples": ["123"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "Authenticate Payer via API or PR",
+						"examples": ["API"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_JavaScriptEnabled": {
+						"type": "string",
+						"description": "Indicates whether or not the payer's browser supports JavaScript",
+						"examples": ["true"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsAuthenticatePayerViaTokenRequest": {
+				"type": "object",
+				"title": "Saved Token",
+				"properties": {
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20221127192933"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique code assigned to each Merchant by PG.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Password assigned to each merchant and is used to authenticate merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_3DS2ReturnURL": {
+						"type": "string",
+						"description": "Merchant return URL after OTP verification.",
+						"examples": ["http://localhost/MerchantSimulator/merchant/testview"]
+					},
+					"pp_browser": {
+						"type": "string",
+						"description": "The User-Agent header of the browser the customer used to place the order",
+						"examples": ["MOZILLA"]
+					},
+					"pp_3DSecureChallengeWindowSize": {
+						"type": "string",
+						"examples": ["FULL_SCREEN"]
+					},
+					"pp_acceptHeaders": {
+						"type": "string",
+						"description": "The content of the Accept request-header field as sent from the payer's browser.",
+						"examples": ["application/json"]
+					},
+					"pp_colorDepth": {
+						"type": "string",
+						"description": "The bit depth (in bits per pixel) of the color palette for displaying images.",
+						"examples": ["24"]
+					},
+					"pp_javaEnabled": {
+						"type": "string",
+						"description": "Indicates whether or not the payer's browser supports Java",
+						"examples": ["true"]
+					},
+					"pp_language": {
+						"type": "string",
+						"description": "The language supported for the payer's browser",
+						"examples": ["en-US"]
+					},
+					"pp_screenHeight": {
+						"type": "string",
+						"description": "The total height of the payer's browser screen in pixels.",
+						"examples": ["640"]
+					},
+					"pp_screenWidth": {
+						"type": "string",
+						"description": "The total width of the payer's browser screen in pixels.",
+						"examples": ["480"]
+					},
+					"pp_timeZone": {
+						"type": "string",
+						"description": "Time difference between UTC time and the Cardholder browser local time, in minutes.",
+						"examples": ["273"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "API OR PR",
+						"examples": ["API"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_JavaScriptEnabled": {
+						"type": "string",
+						"description": "Indicates whether or not the payer's browser supports JavaScript",
+						"examples": ["true"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "It represents the token for returning customer against their already saved card.",
+						"examples": ["9228924639592086"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsAuthenticatePayerResponse": {
+				"type": "object",
+				"title": "Authenticate Payer Response",
+				"properties": {
+					"authenticationStatus": {
+						"type": "string",
+						"description": "AUTHENTICATION_AVAILABLE",
+						"examples": ["AUTHENTICATION_SUCCESSFUL"]
+					},
+					"status": {
+						"type": "string",
+						"description": "SUCCESS",
+						"examples": ["SUCCESS"]
+					},
+					"gatewayRecommendation": {
+						"type": "string",
+						"description": "PROCEED",
+						"examples": ["PROCEED"]
+					},
+					"html": {
+						"type": "string",
+						"examples": [
+							"<div id=\\\"threedsFrictionLessRedirect\\\" xmlns=\\\"http://www.w3.org/1999/html\\\">\n    <iframe id=\\\"challengeFrame\\\" name=\\\"challengeFrame\\\"> </iframe>\n    <form id=\\\"threedsFrictionLessRedirectForm\\\" method=\\\"POST\\\"\n          action=\\\"http://localhost/MerchantSimulator/merchant/testview\\\"\n          target=\\\"challengeFrame\\\">\n        <input type=\\\"hidden\\\" name=\\\"order.id\\\" value=\\\"RAFAYKHAN7T20221127183304\\\" />\n        <input type=\\\"hidden\\\" name=\\\"transaction.id\\\" value=\\\"221127664007\\\" />\n        <input type=\\\"hidden\\\" name=\\\"response.gatewayRecommendation\\\" value=\\\"PROCEED\\\" />\n        <input type=\\\"hidden\\\" name=\\\"result\\\" value=\\\"SUCCESS\\\" />\n    </form>\n    <script id=\\\"authenticate-payer-script\\\">\n        var e = document.getElementById(\\\"threedsFrictionLessRedirectForm\\\");\n        if (e) {\n            e.submit(); if (e.parentNode !== null) { e.parentNode.removeChild(e); }\n        }\n    </script>\n</div>"
+						]
+					},
+					"secureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"CardsDirectPayRequest": {
+				"type": "object",
+				"title": "Raw Card",
+				"properties": {
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "Its value represents of the customer has requested to save the card details. If its value is yes, then a token will be generated against the CHD and will be sent to merchant via ITN",
+						"enum": ["Yes", "No"],
+						"examples": ["yes"]
+					},
+					"pp_CustomerID": {
+						"type": "string",
+						"description": "Registered Customer's LoginID or Identifier provided by Merchant.",
+						"examples": ["25352"]
+					},
+					"pp_CustomerEmail": {
+						"type": "string",
+						"description": "Registered Customer's email address provided by Merchant.",
+						"examples": ["abc@abc.com"]
+					},
+					"pp_CustomerMobile": {
+						"type": "string",
+						"description": "Registered Customer's mobile no. provided by Merchant.",
+						"examples": ["03331234567"]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode)",
+						"enum": ["MPAY"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20221127183304"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique merchant code assigned to each Merchant by PG.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Password assigned to each merchant and is used to authenticate merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of Transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20221110140406"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20221117140406"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description of transaction"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment.",
+						"examples": ["5123456789012346"]
+					},
+					"pp_CustomerCardCVV": {
+						"type": "string",
+						"examples": ["123"]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": ["12/22"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "The discounted amount merchant wants to send. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"pp_DiscountBank": {
+						"type": "string",
+						"description": "BankID of the bank for which merchant wish to send discount..",
+						"examples": [""]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "API OR PR",
+						"examples": ["API"]
+					},
+					"pp_CustomerCardCvv": {
+						"type": "string",
+						"description": "Card verification value, as printed on the back or front of the card.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsDirectPayViaTokenRequest": {
+				"type": "object",
+				"title": "Saved Token",
+				"properties": {
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "Its value represents of the customer has requested to save the card details. If its value is yes, then a token will be generated against the CHD and will be sent to merchant via ITN",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_CustomerID": {
+						"type": "string",
+						"description": "Registered Customer's LoginID or Identifier provided by Merchant.",
+						"examples": ["testPay"]
+					},
+					"pp_CustomerEmail": {
+						"type": "string",
+						"description": "Registered Customer's email address provided by Merchant.",
+						"examples": ["test@test.com"]
+					},
+					"pp_CustomerMobile": {
+						"type": "string",
+						"description": "Registered Customer's mobile no. provided by Merchant.",
+						"examples": ["033456789025"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode)",
+						"enum": ["MPAY"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190403093759"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique merchant code assigned to each Merchant by PG.",
+						"examples": ["Merc0003"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Password assigned to each merchant and is used to authenticate merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of Transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20190403093750"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20190403093747"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\"{} are inserted, they will be replaced with a space. Pipe \u2018\\",
+						"examples": ["Description of pay transaction"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "It represents the tokenized card number of returning customer. This token will be received to the merchant in response of Pay request when saved card details was selected by the customer on Payment portal.",
+						"examples": ["9790662127634170"]
+					},
+					"pp_CustomerCardCvv": {
+						"type": "string",
+						"description": "Customer Card CVV mentioned on back of card",
+						"examples": ["123"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Checksum to check the integrity of the transaction request by PG",
+						"examples": ["1B7082A29290BF222194C0CEF052D08F7E16"]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "API Version",
+						"enum": ["1.1", "2.0"],
+						"examples": ["2.0"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsDirectPayResponse": {
+				"type": "object",
+				"title": "Direct Pay Response",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "SUCCESS",
+						"examples": ["SUCCESS"]
+					},
+					"pp_RetreivalReferenceNo": {
+						"type": "string",
+						"description": "RRN Retreival Reference Number",
+						"examples": ["221127664009"]
+					},
+					"secureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"CardsAuthorizeRequest": {
+				"type": "object",
+				"title": "Raw Card",
+				"properties": {
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_Frequency": {
+						"type": "string",
+						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"enum": ["SINGLE", "RECURRING"],
+						"examples": ["SINGLE"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190620102046"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["1000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment.",
+						"examples": ["5123456789012346"]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": ["0120"]
+					},
+					"pp_CustomerCardCvv": {
+						"type": "string",
+						"description": "Card verification value, as printed on the back or front of the card.",
+						"examples": ["111"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_CustomerID": {
+						"type": "string",
+						"description": "Registered Customer's LoginID or Identifier address provided by Merchant.",
+						"examples": ["test"]
+					},
+					"pp_CustomerEmail": {
+						"type": "string",
+						"description": "Registered Customer's Email address provided by Merchant.",
+						"examples": ["test@test.com"]
+					},
+					"pp_CustomerMobile": {
+						"type": "string",
+						"description": "Regsitered Customer's Mobile Number provided by Merchant.",
+						"examples": ["03222852628"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Yes, if user is already registered. No, if customer is not.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "It represents the request for Create token against provided customer card details,inorder to avoid entering complete card information for future use.",
+						"enum": ["Yes", "No"],
+						"examples": ["No"]
+					},
+					"pp_3DSecureID": {
+						"type": "string",
+						"examples": ["20190620102712564329"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_3dSecureID": {
+						"type": "string",
+						"description": "A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsAuthorizeViaTokenRequest": {
+				"type": "object",
+				"title": "Saved Token",
+				"properties": {
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_Frequency": {
+						"type": "string",
+						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"enum": ["SINGLE", "RECURRING"],
+						"examples": ["SINGLE"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190614173948"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"examples": ["9580698967588146"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_CustomerID": {
+						"type": "string",
+						"examples": ["test"]
+					},
+					"pp_CustomerEmail": {
+						"type": "string",
+						"examples": ["test@test.com"]
+					},
+					"pp_CustomerMobile": {
+						"type": "string",
+						"examples": ["03222852628"]
+					},
+					"pp_3DSecureID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment.",
+						"examples": [""]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": [""]
+					},
+					"pp_CustomerCardCvv": {
+						"type": "string",
+						"description": "Card verification value, as printed on the back or front of the card.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsAuthorizeResponse": {
+				"type": "object",
+				"title": "Authorize Card Response",
+				"properties": {
+					"pp_InstrToken": {
+						"type": "string",
+						"examples": ["F0C774F759EAB8E71ADDD7A4241A3330352F566961EB3B317F8E96D1C18DDA24"]
+					},
+					"pp_TokenizationResponseCode": {
+						"type": "string",
+						"description": "Response code representing whether token generated successfully or not. A response code of T01 represents success.",
+						"examples": ["000"]
+					},
+					"pp_TokenizationResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the token failed to be processed. This field will be mandatory for all cases where response code is not equal to T01.",
+						"examples": ["Success"]
+					},
+					"pp_CustomerCardNumber": {
+						"type": "string",
+						"description": "Card number of the customer making the payment.",
+						"examples": ["5123456789012346"]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": ["0120"]
+					},
+					"pp_CustomerID": {
+						"type": "string",
+						"description": "Customer's LoginID or Identifier address provided by Merchant.",
+						"examples": ["test"]
+					},
+					"pp_CustomerEmail": {
+						"type": "string",
+						"description": "Customer's Email address provided by Merchant.",
+						"examples": ["test@test.com"]
+					},
+					"pp_CustomerMobile": {
+						"type": "string",
+						"description": "Customer's Mobile Number provided by Merchant.",
+						"examples": ["03222852628"]
+					},
+					"pp_ShouldTokenizeCardNumber": {
+						"type": "string",
+						"description": "It represents the request for Create token against provided customer card details,inorder to avoid entering complete card information for future use.",
+						"enum": ["Yes", "No"],
+						"examples": ["No"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Yes, if user is already registered. No, if customer is not.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190620102046"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["1000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_Frequency": {
+						"type": "string",
+						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"enum": ["SINGLE", "RECURRING"],
+						"examples": ["SINGLE"]
+					},
+					"pp_3DSecureID": {
+						"type": "string",
+						"examples": ["20190620102712564329"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Merchant to check the integrity of the transaction response.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_3dSecureID": {
+						"type": "string",
+						"description": "A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.",
+						"examples": [""]
+					}
+				}
+			},
+			"CardsCaptureRequest": {
+				"type": "object",
+				"title": "Capture Card Request",
+				"properties": {
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190620102046"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["1000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_3DSecureID": {
+						"type": "string",
+						"examples": ["20190620102712564329"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"CardsCaptureResponse": {
+				"type": "object",
+				"title": "Capture Card Response",
+				"properties": {
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190620102046"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["1000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_3DSecureID": {
+						"type": "string",
+						"examples": ["20190620102712564329"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Merchant to check the integrity of the transaction response.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_3dSecureID": {
+						"type": "string",
+						"description": "A unique identifier supplied by Jazz Cash to Merchant in Check 3DS Enrollment response.",
+						"examples": [""]
+					}
+				}
+			},
+			"CardsRetrieveRequest": {
+				"type": "object",
+				"title": "Retrieve Order & Transactions Request",
+				"properties": {
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20170518161115"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "Payment Portal Version",
+						"enum": ["1.1"],
+						"examples": ["1.1"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash", "pp_Version"]
+			},
+			"CardsRetrieveResponse": {
+				"type": "object",
+				"title": "Retrieve Order & Transactions Response",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Status of the transaction at JazzCash payment gateway.",
+						"examples": [""]
+					},
+					"rrn": {
+						"type": "string",
+						"description": "A unique number generated by the Payment Gateway at the time of transaction processing. The number should be stored and used for future reference. The number is unique for any given date.",
+						"examples": ["992837465012"]
+					},
+					"settlementDate": {
+						"type": "string",
+						"description": "A date supplied by the Payment Gateway to indicate when this transaction will be settled. When the Payment Gateway closes the batch at the end of the day, the date will roll over to the next processing day\u2019s date. This date will only be provided in case a transaction is already confirmed by the merchant.",
+						"examples": [""]
+					},
+					"settlementExpiryDate": {
+						"type": "string",
+						"description": "A date supplied by the Payment Gateway indicating that if the merchant does not send a confirmation of the transaction by this time, the payment gateway will mark the transaction as expired and the merchant will not be able to resume it. This field will be mandatory where Auth Code is available.",
+						"examples": [""]
+					},
+					"authCode": {
+						"type": "string",
+						"description": "An identifying code issued by the issuing bank to approve or deny the transaction. The field is mandatory in case of successful response code. Refer to Appendix I for a list of response codes and the codes which when sent will require Auth Code.",
+						"examples": ["123456"]
+					},
+					"bankID": {
+						"type": "string",
+						"description": "This field will only be used in case of Direct Debit transaction type, otherwise it should be sent as an empty field. Customer's bank that authorized the transaction.",
+						"examples": [""]
+					},
+					"productID": {
+						"type": "string",
+						"description": "This field will only be used in case of Direct Debit transaction type. Product ID of bank through which payment has been performed. e.g. Retail, Corporate. Fixed values: \u2018RETL\u2019, \u2018CORP\u2019. In case value was provided at the time of request, this field will contain the same value. Otherwise, ID of the product chosen by customer at Payment Gateway will be filled.",
+						"examples": [""]
+					}
+				}
+			},
+			"MobileWalletV1Request": {
+				"type": "object",
+				"title": "v1 - Default Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Specifies the language in which to display the page.",
+						"enum": ["EN"],
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each sub merchant by the payment gateway.",
+						"examples": [""]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20261007123456"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"description": "MobileNumber for MWallet Account.",
+						"examples": ["03123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"description": "Last 6 digits of CNIC number for MWallet Account.",
+						"examples": ["345678"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "Discounted Amount (Final amount after discount). Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount.",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20261007 123456"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef123"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "Payment Portal Version.",
+						"enum": ["1.1"],
+						"examples": ["1.1"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"MobileWalletV1Response": {
+				"type": "object",
+				"title": "v1 - Default Response",
+				"properties": {
+					"pp_Amount": {
+						"type": "string",
+						"examples": ["10000"]
+					},
+					"pp_AuthCode": {
+						"type": "string",
+						"examples": ["123456"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"examples": ["billRef123"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_RetrievalReferenceNo": {
+						"type": "string",
+						"examples": ["992837465012"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"examples": ["20261007 123456"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"examples": ["T20261007123456"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"examples": ["03123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"examples": ["345678"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"examples": ["0"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"MobileWalletV2CNICRequest": {
+				"type": "object",
+				"title": "v2 - CNIC Enabled Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"enum": ["EN"],
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20261007123456"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"description": "MobileNumber for MWallet Account.",
+						"examples": ["03123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"description": "This field will contain Customer's last 6 digits of CNIC (used only in version 2.0)",
+						"examples": ["345678"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "Amount in minor units",
+						"examples": ["0"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20261007 123456"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef123"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Payment Description"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": [""]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "Payment Portal Version",
+						"enum": ["1.1"],
+						"examples": ["1.1"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"MobileWalletV2CNICResponse": {
+				"type": "object",
+				"title": "v2 - CNIC Enabled Response",
+				"properties": {
+					"pp_Amount": {
+						"type": "string",
+						"description": "Amount in minor units",
+						"examples": ["10000"]
+					},
+					"pp_AuthCode": {
+						"type": "string",
+						"examples": ["123456"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"examples": ["billRef"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"enum": ["EN"],
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_RetrievalReferenceNo": {
+						"type": "string",
+						"examples": ["992837465012"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"examples": ["20261007 123456"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"examples": ["T20261007123456"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"examples": ["03123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"examples": ["345678"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "Amount in minor units",
+						"examples": ["0"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"MobileWalletV3MPINRequest": {
+				"type": "object",
+				"title": "v3 - Hosted MPIN Request",
+				"properties": {
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"description": "If the merchant is handling any child merchants at its end, then the child merchant Id will be provided. The Transaction reports will be grouped on the basis of Sub Merchant Id, if available.",
+						"examples": [""]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["01234567890"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20210830104840"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"description": "This field will contain Customer's Mobile Number (used only in version 2.0)",
+						"examples": ["03123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"description": "This field will contain Customer's last 6 digits of CNIC (used only in version 2.0)",
+						"examples": ["4210112345678"]
+					},
+					"pp_MPIN": {
+						"type": "string",
+						"description": "This field will contain Customer's 4 digit MPIN",
+						"examples": ["4444"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "This field will contain final amount after discount (used only in version 2.0) Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20210830104840"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["bill red"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["payment description"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20210930104840"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_UsageMode": {
+						"type": "string",
+						"description": "Specifies the usage mode of API calling.",
+						"examples": ["API"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_Version": {
+						"type": "string",
+						"description": "Payment Portal Version",
+						"enum": ["1.1"],
+						"examples": ["1.1"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"MobileWalletV3MPINResponse": {
+				"type": "object",
+				"title": "v3 - Hosted MPIN Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"description": "If the merchant is handling any child merchants at its end, then the child merchant Id will be provided. The Transaction reports will be grouped on the basis of Sub Merchant Id, if available.",
+						"examples": [""]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "This field will contain final amount after discount (used only in version 2.0) Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20210830104840"]
+					},
+					"pp_RetrievalReferenceNo": {
+						"type": "string",
+						"description": "A unique number generated by the Payment Gateway when the transaction got processed. The number should be stored and used for future reference. The number is unique for any given date.",
+						"examples": ["210830396548"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20210830104844"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"description": "This field will contain Customer's Mobile Number (used only in version 2.0)",
+						"examples": ["03123456789"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"pp_AuthCode": {
+						"type": "string",
+						"description": "An identifying code issued by the issuing bank to approve or deny the transaction. The field is mandatory in case of successful response code. Refer to Appendix I for a list of response",
+						"examples": ["5515185515"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"MobileWalletV4RecurringRequest": {
+				"type": "object",
+				"title": "v4 - Recurring Payments Request",
+				"properties": {
+					"pp_PaymentToken": {
+						"type": "string",
+						"description": "Unique Token value for mobile account transaction.",
+						"examples": ["yJb/oKWl2UgvgSAWDazRS6p8KO09d8Oa"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20211112181543"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "This field will contain final amount after discount (used only in version 2.0) Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billref"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["payment description"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20211112181543"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20211113181543"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["047AF9DEAC752747463B6CC85C31E2C6D5B7422E10695CFC57AF8D71CF3D0E57"]
+					},
+					"pp_ppmpf#": {
+						"type": "string",
+						"description": "These are optional fields, if sent, will be part of the secure hash.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"MobileWalletV4RecurringResponse": {
+				"type": "object",
+				"title": "v4 - Recurring Payments Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "This field will contain final amount after discount (used only in version 2.0) Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_RetreivalReferenceNo": {
+						"type": "string",
+						"examples": ["211112544112"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20211112181543"]
+					},
+					"pp_PaymentToken": {
+						"type": "string",
+						"description": "Unique Token value for mobile account transaction.",
+						"examples": ["yJb/oKWl2UgvgSAWDazRS6p8KO09d8Oa"]
+					},
+					"pp_DiscountedAmount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["0"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["EF9AF62C069CEE0F590B396876CBA4887982D09B420FA47AB6A8533A5C6D6FD3"]
+					},
+					"pp_RetrievalReferenceNo": {
+						"type": "string",
+						"description": "A unique number generated by the Payment Gateway when the transaction got processed. The number should be stored and used for future reference. The number is unique for any given date.",
+						"examples": ["992837465012"]
+					}
+				}
+			},
+			"VoucherPaymentRequest": {
+				"type": "object",
+				"title": "Voucher Payment Request",
+				"properties": {
+					"pp_Version": {
+						"type": "string",
+						"description": "Payment Portal Version",
+						"enum": ["1.1"],
+						"examples": ["1.1"]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"enum": ["OTC"],
+						"examples": ["OTC"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"description": "Specifies the language in which to display the page.",
+						"enum": ["EN"],
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["Test00127801"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each sub merchant by the payment gateway.",
+						"examples": [""]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_BankID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_ProductID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20170517101549"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["100"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20170517101549"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["billRef"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description"]
+					},
+					"pp_TxnExpiryDateTime": {
+						"type": "string",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"examples": ["20170824101549"]
+					},
+					"pp_ReturnURL": {
+						"type": "string",
+						"description": "The URL where merchant wants the transaction results to be shown. Once the transaction has been processed, response details will be sent over to the merchant on this URL using an HTTP POST Request.",
+						"examples": ["http://localhost/MerchantSimulator/HttpRequestDemoServer/Index"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": ["03122036440"]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"VoucherPaymentResponse": {
+				"type": "object",
+				"title": "Voucher Payment Response",
+				"properties": {
+					"pp_Amount": {
+						"type": "string",
+						"description": "Amount in minor units",
+						"examples": ["10000"]
+					},
+					"pp_AuthCode": {
+						"type": "string",
+						"examples": ["123456"]
+					},
+					"pp_BankID": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"examples": ["billRef123"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_RetreivalReferenceNo": {
+						"type": "string",
+						"examples": ["992837465012"]
+					},
+					"pp_SubMerchantId": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"examples": ["20261007 123456"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"examples": ["T20261007123456"]
+					},
+					"pp_SettlementExpiry": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_TxnType": {
+						"type": "string",
+						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"enum": ["MPAY", "AUTH"],
+						"examples": ["MPAY"]
+					},
+					"pp_Version": {
+						"type": "string",
+						"enum": ["1.1", "2.0"],
+						"examples": ["1.1"]
+					},
+					"ppmbf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmbf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmbf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmbf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmbf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": [""]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				}
+			},
+			"VoucherExpireRequest": {
+				"type": "object",
+				"title": "Voucher Expiry Request",
+				"properties": {
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_Voucher": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the voucher.",
+						"examples": ["210331232548"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["7AC1F74C9FEBFDBAB1BCABC4B5E19A6DAEE5A7BE2AD067FE0C729B44061AC9FC"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"VoucherExpireResponse": {
+				"type": "object",
+				"title": "Voucher Expiry Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["The requested operation has been performed successfully."]
+					},
+					"pp_Voucher": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the voucher.",
+						"examples": ["210406238600"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["0E8803FDD5C918F31C8ED3171EE8C12C26E6903ED20FC459103E56525FB514E9"]
+					},
+					"pp_responseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_responseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					}
+				}
+			},
+			"BankValidateCustomerRequest": {
+				"type": "object",
+				"title": "Validate Account Request",
+				"properties": {
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_SubMerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each sub merchant by the payment gateway.",
+						"examples": [""]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_BankID": {
+						"type": "string",
+						"description": "Bank ID provided by merchant to perform transaction through provided bank.",
+						"examples": ["11"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20220217103423"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "Amount in minor units",
+						"examples": ["10000"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"description": "This field will contain Customer's CNIC.",
+						"examples": ["4210112345678"]
+					},
+					"pp_AccountNo": {
+						"type": "string",
+						"description": "This field will contain Bank account number of customer.",
+						"examples": ["PKSCB4352345234523452345"]
+					},
+					"pp_MobileNumber": {
+						"type": "string",
+						"description": "This field will contain Customer's Mobile Number.",
+						"examples": ["03123456789"]
+					},
+					"pp_EmailAddress": {
+						"type": "string",
+						"description": "This field will contain Customer's email address.",
+						"examples": ["emailemail@gmail.com"]
+					},
+					"pp_TxnDateTime": {
+						"type": "string",
+						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"examples": ["20220217103423"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["a94e1cf4e0ad9d2e9c6987531db52eb508f0d1d9576b499469b16dd41b8bf894"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"BankValidateCustomerResponse": {
+				"type": "object",
+				"title": "Validate Account Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your operation successfully completed."]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20220217103423"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["946A3CDE52B733A96CCAA0FB1A3AF8A83F787EC229F73D7551378F2EE1F29276"]
+					}
+				}
+			},
+			"BankAccountPaymentRequest": {
+				"type": "object",
+				"title": "Initiate Payment Request",
+				"properties": {
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20220216140731"]
+					},
+					"pp_OTP": {
+						"type": "string",
+						"description": "Value of OTP received by customer to perform Bank Account Transaction.",
+						"examples": ["123456"]
+					},
+					"pp_BillReference": {
+						"type": "string",
+						"description": "Bill/invoice Number being settled.",
+						"examples": ["bill Ref"]
+					},
+					"pp_Currency": {
+						"type": "string",
+						"examples": ["PKR"]
+					},
+					"pp_Description": {
+						"type": "string",
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description"]
+					},
+					"ppmpf_1": {
+						"type": "string",
+						"examples": ["1"]
+					},
+					"ppmpf_2": {
+						"type": "string",
+						"examples": ["2"]
+					},
+					"ppmpf_3": {
+						"type": "string",
+						"examples": ["3"]
+					},
+					"ppmpf_4": {
+						"type": "string",
+						"examples": ["4"]
+					},
+					"ppmpf_5": {
+						"type": "string",
+						"examples": ["5"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["128376a8f0317d1768cf94b2d38bee8754b418dc6d6910f8e9c06124f1114c54"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount.",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"ppmpf_#": {
+						"type": "string",
+						"description": "Optional value provided by merchant to maintain their record.",
+						"examples": [""]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+			},
+			"BankAccountPaymentResponse": {
+				"type": "object",
+				"title": "Initiate Payment Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20220216140731"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["145067841BC9A8C65D9E00C2C78AD2894672CA266D215992F307C2ADA58FB3AE"]
+					}
+				}
+			},
+			"BankGetBanksRequest": {
+				"type": "object",
+				"title": "Get Banks Request",
+				"properties": {
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["a94e1cf4e0ad9d2e9c6987531db52eb508f0d1d9576b499469b16dd41b8bf894"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"BankGetBanksResponse": {
+				"type": "object",
+				"title": "Get Banks Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["The requested operation has been performed successfully."]
+					},
+					"pp_Banks": {
+						"type": "string",
+						"description": "This field will contains list of Banks with BankCode and BankName.",
+						"examples": ["["]
+					},
+					"BankCode": {
+						"type": "string",
+						"examples": ["11"]
+					},
+					"BankName": {
+						"type": "string",
+						"examples": ["Demo Bank"]
+					}
+				}
+			},
+			"RefundMobileAccountRequest": {
+				"type": "object",
+				"title": "Mobile Account Refund Request",
+				"properties": {
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20190515094840"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["20000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC2645"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["vgyttef556"]
+					},
+					"pp_MerchantMPIN": {
+						"type": "string",
+						"description": "4 digit numeric MPIN of JazzCash mobile Accounty.",
+						"examples": ["1111"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["70524E8D609D14F2D9DF6DB4887A36EA0D4A247B0EB4B3E85730FCD4D9C74503"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"RefundMobileAccountResponse": {
+				"type": "object",
+				"title": "Mobile Account Refund Response",
+				"properties": {
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					}
+				}
+			},
+			"RefundCardRequest": {
+				"type": "object",
+				"title": "Card Payment Refund Request",
+				"properties": {
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20201204151517"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC2645"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["vgyttef556"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["F1CB6FE2F69A5B86C63B49F309AC37BBC40FE6A5394CED7147C6876820F6A1AF"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"RefundCardResponse": {
+				"type": "object",
+				"title": "Card Payment Refund Response",
+				"properties": {
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					}
+				}
+			},
+			"RefundVoucherRequest": {
+				"type": "object",
+				"title": "Voucher Refund Request",
+				"properties": {
+					"pp_VoucherID": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the voucher.",
+						"examples": ["210401236561"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["0123456789"]
+					},
+					"pp_CNIC": {
+						"type": "string",
+						"description": "This field will contain Customer's last 6 digits of CNIC (used only in version 2.0)",
+						"examples": ["4201234567890"]
+					},
+					"pp_Currency": {
+						"type": "string",
+						"examples": ["PKR"]
+					},
+					"pp_Amount": {
+						"type": "string",
+						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
+						"examples": ["10000"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["7AC1F74C9FEBFDBAB1BCABC4B5E19A6DAEE5A7BE2AD067FE0C729B44061AC9FC"]
+					},
+					"pp_TxnCurrency": {
+						"type": "string",
+						"description": "Currency of transaction amount",
+						"enum": ["PKR"],
+						"examples": ["PKR"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash", "pp_TxnCurrency"]
+			},
+			"RefundVoucherResponse": {
+				"type": "object",
+				"title": "Voucher Refund Response",
+				"properties": {
+					"pp_ResponseCode": {
+						"type": "string",
+						"examples": ["000"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"examples": ["The requested operation has been performed successfully."]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["0E8803FDD5C918F31C8ED3171EE8C12C26E6903ED20FC459103E56525FB514E9"]
+					},
+					"pp_responseCode": {
+						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
+						"examples": ["000"]
+					},
+					"pp_responseMessage": {
+						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
+						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
+					}
+				}
+			},
+			"TokenRetrieveRequest": {
+				"type": "object",
+				"title": "Retrieve Token Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Language Code used by.",
+						"examples": ["EN"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"examples": [""]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Yes, if user is already registered. No, if customer is not.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC0484"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["89tfat7e74"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "A number provided by payment gateway to reuse card details which was saved against this number.",
+						"examples": [""]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"TokenRetrieveResponse": {
+				"type": "object",
+				"title": "Retrieve Token Response",
+				"properties": {
+					"pp_Brand": {
+						"type": "string",
+						"description": "Type/Brand of user\u2019s card.",
+						"examples": ["MASTERCARD"]
+					},
+					"pp_Expiry": {
+						"type": "string",
+						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"examples": ["1225"]
+					},
+					"pp_FundingMethod": {
+						"type": "string",
+						"description": "Method through which card funds will be transferred.",
+						"examples": ["DEBIT"]
+					},
+					"pp_Issuer": {
+						"type": "string",
+						"description": "Issuer of user\u2019s card.",
+						"examples": ["BANCO DEL PICHINCHA, C.A."]
+					},
+					"pp_LocalBrand": {
+						"type": "string",
+						"description": "Type/Brand of user\u2019s card.",
+						"examples": ["MASTERCARD"]
+					},
+					"pp_cardNumber": {
+						"type": "string",
+						"description": "Card number of the customer.",
+						"examples": ["512345******2346"]
+					},
+					"pp_tokenStatus": {
+						"type": "string",
+						"description": "Status of token, which was given by user in request.",
+						"examples": ["VALID"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"description": "Language code.",
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC0484"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["89tfat7e74"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "card number on the basis of which token was provided to user.",
+						"examples": ["9580698967588146"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"description": "Unique Identifier.",
+						"examples": ["20190503175517"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Whether the customer was previously registered or not.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the operation success or failure. A response code of T00 represents success.",
+						"examples": ["T00"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the operation failed to be processed. This field will be mandatory for all cases where response code is not equal to T00.",
+						"examples": ["The tokenization operation was successfully processed"]
+					}
+				}
+			},
+			"TokenDeleteRequest": {
+				"type": "object",
+				"title": "Delete Token Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Language Code",
+						"examples": ["EN"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"description": "Unique Identifier.",
+						"examples": ["20190503175740"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Whether the customer was previously registered or not",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC0484"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["89tfat7e74"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "card number on the basis of which token was provided to user",
+						"examples": ["9580698967588146"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["d0dfd405bdd1724877d976d31c06cbef7282e2319b47d4cc9602daee44139a09"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"TokenDeleteResponse": {
+				"type": "object",
+				"title": "Delete Token Response",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Language Code.",
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["MC0484"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["89tfat7e74"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Type of instrument used for making payment.",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "Card number on the basis of which token was provided to user.",
+						"examples": ["9580698967588146"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"description": "Unique Identifier.",
+						"examples": ["20190503175817"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Whether the customer was previously registered or not.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the operation success or failure. A response code of T00 represents success.",
+						"examples": ["T00"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the operation failed to be processed. This field will be mandatory for all cases where response code is not equal to T00.",
+						"examples": ["The tokenization operation was successfully processed"]
+					}
+				}
+			},
+			"TokenInquireRequest": {
+				"type": "object",
+				"title": "Inquire Token Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Language Code",
+						"examples": ["EN"]
+					},
+					"pp_TxnRefNo": {
+						"type": "string",
+						"description": "A unique value created by the merchant to identify the transaction.",
+						"examples": ["T20191129130351"]
+					},
+					"pp_MerchantId": {
+						"type": "string",
+						"examples": ["MC0484"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Assigned to each merchant, used for authentication of the merchant at the time of payment.",
+						"examples": ["89tfat7e74"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
+						"examples": ["RafayKhan7"]
+					}
+				},
+				"required": ["pp_TxnRefNo", "pp_Password", "pp_SecureHash", "pp_MerchantID"]
+			},
+			"TokenInquireResponse": {
+				"type": "object",
+				"title": "Inquire Token Response",
+				"properties": {
+					"pp_Token": {
+						"type": "string",
+						"description": "A number provided by payment gateway to reuse card details which was saved against this number.",
+						"examples": ["9580698967588146"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Response code representing the operation success or failure. A response code of T00 represents success.",
+						"examples": ["T00"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Error details in case the operation failed to be processed. This field will be mandatory for all cases where response code is not equal to T00.",
+						"examples": ["The tokenization operation was successfully processed"]
+					}
+				}
+			},
+			"TokenUpdateRequest": {
+				"type": "object",
+				"title": "Update Token Request",
+				"properties": {
+					"pp_Language": {
+						"type": "string",
+						"description": "Specifies the language in which to display the page.",
+						"enum": ["EN"],
+						"examples": ["EN"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"description": "It\u2019s a Unique Identifier. It can be alphanumeric and should not be greater than 40",
+						"examples": ["abcosiufgjss18"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Unique Merchant Code assigned to each Merchant by PG.",
+						"examples": ["TestMerchant"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Password assigned to each merchant and is used to authenticate merchant at the time of payment. It is a system generated value.",
+						"examples": ["0123456789"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"examples": ["5123458791130008"]
+					},
+					"pp_CustomerCardExpiry": {
+						"type": "string",
+						"examples": ["1225"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Checksum to check the integrity of the transaction request, by Payment Gateway.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					}
+				},
+				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+			},
+			"TokenUpdateResponse": {
+				"type": "object",
+				"title": "Update Token Response",
+				"properties": {
+					"pp_Expiry": {
+						"type": "string",
+						"description": "Expiry date of card in the format of MM/YY.",
+						"examples": ["1225"]
+					},
+					"pp_cardNumber": {
+						"type": "string",
+						"description": "Masked Card number of the customer who made the payment.",
+						"examples": ["512345xxxxxx0008"]
+					},
+					"pp_tokenStatus": {
+						"type": "string",
+						"description": "Validity status of the provided token.",
+						"examples": ["VALID"]
+					},
+					"pp_Language": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["EN"]
+					},
+					"pp_MerchantID": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["TestMerchant"]
+					},
+					"pp_SecureHash": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
+					},
+					"pp_Password": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["0123456789"]
+					},
+					"pp_InstrumentType": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["CARD"]
+					},
+					"pp_TokenizedCardNumber": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["5123458791130008"]
+					},
+					"pp_CorrelationId": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["abcosiufgjss18"]
+					},
+					"pp_IsRegisteredCustomer": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"enum": ["Yes", "No"],
+						"examples": ["Yes"]
+					},
+					"pp_ResponseCode": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["T00"]
+					},
+					"pp_ResponseMessage": {
+						"type": "string",
+						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"examples": ["The tokenization operation was successfully processed"]
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"MerchantCredentials": {
+				"type": "apiKey",
+				"in": "body",
+				"name": "pp_MerchantID",
+				"description": "Merchant ID and Password sent in payload alongside SHA-256 HMAC secure hash."
+			}
+		}
+	}
+}

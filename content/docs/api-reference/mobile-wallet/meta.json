@@ -1,0 +1,4 @@
+{
+	"title": "Mobile Wallet",
+	"pages": ["mobileWalletV1", "mobileWalletPayV2CNIC", "mobileWalletPayV3HostedMPIN", "mobileWalletPayV4Recurring"]
+}

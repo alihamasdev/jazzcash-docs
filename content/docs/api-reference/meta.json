@@ -1,5 +1,20 @@
 {
 	"title": "API Reference",
 	"root": true,
-	"pages": ["index", "cards", "mobile-wallet", "vouchers", "bank-accounts", "tokenization", "refund", "response-codes"]
+	"pages": [
+		"index",
+		"response-codes",
+		"---Cards---",
+		"...cards",
+		"---Mobile Wallet---",
+		"...mobile-wallet",
+		"---Vouchers---",
+		"...vouchers",
+		"---Bank Accounts---",
+		"...bank-accounts",
+		"---Tokenization---",
+		"...tokenization",
+		"---Refund---",
+		"...refund"
+	]
 }

@@ -1,0 +1,11 @@
+{
+	"title": "Cards",
+	"pages": [
+		"cardsInitiateAuthentication",
+		"cardsAuthenticatePayer",
+		"cardsDirectPay",
+		"cardsAuthorize",
+		"cardsCapture",
+		"cardsRetrieveOrder"
+	]
+}
