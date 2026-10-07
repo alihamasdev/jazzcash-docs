@@ -5,7 +5,7 @@ description: API reference for JazzCash Mobile Account payments across REST v1.1
 
 Following Mobile Account based API's are available with detailed description and relevant information.
 
-## Mobile Account API - Version 1.1 - Default
+## Default `v1.0`
 
 This is REST based API used for the transaction of Mobile Account as a payment instrument.
 
@@ -89,7 +89,7 @@ This is REST based API used for the transaction of Mobile Account as a payment i
 | `"responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
 | `"responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
 
-## Mobile Account API - Version 2.0 - CNIC Enablement
+## CNIC Enablement `v2.0`
 
 ### Request Body
 
@@ -167,7 +167,7 @@ This is REST based API used for the transaction of Mobile Account as a payment i
 | `"responseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
 | `"responseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
 
-## Mobile Account API - Version 3.0 - Hosted MPIN
+## Hosted MPIN `v3.0`
 
 ### Request Body
 
@@ -244,51 +244,7 @@ This is REST based API used for the transaction of Mobile Account as a payment i
 | `"pp_DiscountedAmount"`     | The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided.                                        |
 | `"pp_SecureHash"`           | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                                                                            |
 
-## Mobile Account Linking API - Version 4.0 - Recurring Payments
-
-### Request Body
-
-```json
-{
-	"pp_RequestID": "485616874234984132148",
-	"pp_MerchantID": "RafayKhan7",
-	"pp_Password": "0123456789",
-	"pp_MobileNumber": "03362160806",
-	"pp_MPIN": "5555",
-	"pp_CNIC": "2440100000000",
-	"pp_SecureHash": "C39C48541FF1A010681973583F614BAC961F04F2BC63BC56121F4F448679B345"
-}
-```
-
-| Parameter           | Description                                                                                                                      |
-| :------------------ | :------------------------------------------------------------------------------------------------------------------------------- |
-| `"pp_RequestID"`    | A unique value created by the merchant to identify the request.                                                                  |
-| `"pp_MerchantID"`   | Unique Id assigned to each merchant by the payment gateway.                                                                      |
-| `"pp_Password"`     | Assigned to each merchant, used for authentication of the merchant at the time of payment. Password is a system generated value. |
-| `"pp_MobileNumber"` | This field will contain Customer's Mobile Number (used only in version 2.0)                                                      |
-| `"pp_CNIC"`         | This field will contain Customer's last 6 digits of CNIC (used only in version 2.0)                                              |
-| `"pp_MPIN"`         | This field will contain Customer's 4 digit MPIN                                                                                  |
-| `"pp_SecureHash"`   | Used to allow the Payment Gateway to check the integrity of the transaction request.                                             |
-
-### Response Body
-
-```json
-{
-	"pp_ResponseCode": "000",
-	"pp_ResponseMessage": "Thank you for Using JazzCash, your transaction was successful.",
-	"pp_Token": "hyH9LqWl2Ui+IzsDM3/PRaDG0z+dHdwo",
-	"pp_SecureHash": ""
-}
-```
-
-| Parameter              | Description                                                                                                                                       |
-| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `"pp_ResponseCode"`    | Response code representing the transaction success or failure. A response code of 000 represents success.                                         |
-| `"pp_ResponseMessage"` | Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000. |
-| `"pp_Token"`           | Unique Token value for requested mobile account.                                                                                                  |
-| `"pp_SecureHash"`      | Used to allow the Payment Gateway to check the integrity of the transaction request.                                                              |
-
-## Mobile Account API - Version 4.0 - Recurring Payments
+## Recurring Payments `v4.0`
 
 ### Request Body
 

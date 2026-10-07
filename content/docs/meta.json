@@ -1,15 +1,14 @@
 {
 	"title": "Documentation",
+	"root": true,
 	"pages": [
-		"---Basics---",
 		"index",
+		"---Basics---",
 		"getting-started",
 		"http-post",
 		"api-testing",
 		"transaction-testing",
 		"going-live",
-		"---API Reference---",
-		"...api",
 		"---Features---",
 		"...features",
 		"---AI & Agents---",

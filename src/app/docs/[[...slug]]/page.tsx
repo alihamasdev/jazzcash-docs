@@ -9,6 +9,7 @@ import { source } from "@/lib/source";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
 	const params = await props.params;
+
 	const page = source.getPage(params.slug);
 	if (!page) notFound();
 
