@@ -1,0 +1,25 @@
+---
+title: Mode Selection
+description: "Choose the right integration mode for your application: Hosted Page Redirection (HTTP POST) or direct server-to-server REST APIs."
+---
+
+import { Globe, Terminal } from "lucide-react";
+
+JazzCash allows merchants to integrate their website with our payment gateway via following modes:
+
+<Cards>
+	<Card
+		icon={<Globe />}
+		title="HTTP POST (Page Redirection)"
+		href="/docs/mode-selection/http-post"
+		description="Integrate JazzCash hosted checkout and payment page redirection via standard HTTP POST."
+		className="hover:border-fd-primary/30 hover:bg-fd-card"
+	/>
+	<Card
+		icon={<Terminal />}
+		title="API Testing"
+		href="/docs/mode-selection/api-testing"
+		description="Test and validate JazzCash payment API payloads and responses in the sandbox environment."
+		className="hover:border-fd-primary/30 hover:bg-fd-card"
+	/>
+</Cards>

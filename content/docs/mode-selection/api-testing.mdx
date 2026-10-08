@@ -1,0 +1,102 @@
+---
+title: API Testing
+description: Test and validate JazzCash payment API payloads and responses in the sandbox environment.
+---
+
+import { CreditCard, Receipt, SearchCheck, Smartphone } from "lucide-react";
+
+The JazzCash Sandbox provides an interactive **API Testing Console** to test API endpoints, construct JSON payloads, and inspect live gateway responses before writing production code.
+
+![API Testing Console](/api-testing.png)
+
+## Testing Walkthrough
+
+Follow these steps to configure, execute, and validate API requests in the sandbox environment:
+
+<Steps>
+<Step>
+
+### Select Transaction Type & Operation
+
+Choose your target payment channel from the **Select Transaction Type** dropdown. Each option provides specific operations:
+
+<Cards>
+	<Card icon={<Smartphone />} title="Mobile Account">
+		Simulate direct mobile wallet purchases and customer account debits (`MWALLET`).
+	</Card>
+	<Card icon={<Receipt />} title="Voucher Payments">
+		Simulate Over-The-Counter (`OTC`) cash voucher generation payable at nationwide retail agents.
+	</Card>
+	<Card icon={<CreditCard />} title="Card (VISA / Mastercard)">
+
+    	Test the complete card payment lifecycle:
+    	- **Pay** &mdash; Direct purchase debit
+    	- **Authorize** &mdash; Pre-authorization hold
+    	- **Capture** &mdash; Settle authorized funds
+    	- **Refund** &mdash; Transaction reversal
+    	- **Void** &mdash; Cancel authorization
+
+    </Card>
+    <Card icon={<SearchCheck />} title="Status Inquiry">
+
+    	Verify and synchronize transaction states:
+    	- **Transaction Status Inquiry** &mdash; Query real-time status of a transaction
+    	- **Transaction Status Update** &mdash; Reconcile and synchronize payment state
+
+    </Card>
+
+</Cards>
+
+</Step>
+<Step>
+
+### Inspect Target API URL
+
+Once you select a transaction type, the sandbox console displays the corresponding **API URL**.
+
+You can execute calls directly in the sandbox interface or copy this endpoint to test from external clients such as **cURL**, **Postman** or your backend application:
+
+```http
+POST https://sandbox.jazzcash.com.pk/ApplicationAPI/API/Payment/DoTransaction
+```
+
+</Step>
+<Step>
+
+### Configure Request Parameters
+
+In the **Random Request Parameters** section, provide the required testing values. You can also click the refresh icon next to the reference field to auto-generate a unique value:
+
+| Parameter                        | Field Name    | Description                                                          | Example          |
+| :------------------------------- | :------------ | :------------------------------------------------------------------- | :--------------- |
+| **Transaction Reference Number** | `pp_TxnRefNo` | Unique alphanumeric identifier for each transaction                  | `T2026100812345` |
+| **Amount**                       | `pp_Amount`   | Transaction amount formatted in paisas (e.g. `100.00` PKR = `10000`) | `10000`          |
+| **Mobile Number**                | `ppmpf_1`     | Customer or merchant test mobile account number                      | `03001234567`    |
+
+</Step>
+<Step>
+
+### Generate Payload & Execute
+
+The **JSON Payload** preview updates automatically in real time to reflect your parameters:
+
+1. **Review Request**: Verify that the generated payload contains the expected fields and values.
+2. **Execute Call**: Click the **Run** button to dispatch the request to the JazzCash sandbox.
+3. **Inspect Response**: View the gateway's live JSON output in the **API Response** panel:
+
+```json
+{
+	"pp_ResponseCode": "000",
+	"pp_ResponseMessage": "Thank you for using JazzCash, your transaction was successful.",
+	"pp_TxnRefNo": "T2026100812345",
+	"pp_RetreivalReferenceNo": "171017174400"
+}
+```
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Response Code Verification">
+	A response code of `000` indicates a successful transaction. If the sandbox returns an error code (such as `110`, `124`, or `157`), refer
+	to the [Response Codes Guide](/docs/api-reference/response-codes) for detailed troubleshooting steps.
+</Callout>
