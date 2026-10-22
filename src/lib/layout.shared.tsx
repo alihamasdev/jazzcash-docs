@@ -9,7 +9,7 @@ const navTitle = (
 	<div className="inline-flex items-center gap-2">
 		<Image src={Logo} alt={appName} width={24} height={24} priority />
 		<span className="font-heading text-base/7 font-semibold">{appName}</span>
-		<span className="text-xs text-muted-foreground">v4.2</span>
+		<span className="text-muted-foreground text-xs">v4.2</span>
 	</div>
 );
 

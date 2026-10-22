@@ -14,10 +14,10 @@ function CustomResultDisplay(props: ResultDisplayProps) {
 	const isAlteredStatus = status === 422 || status === 400;
 
 	return (
-		<div className="flex flex-col flex-1 min-h-0">
+		<div className="flex min-h-0 flex-1 flex-col">
 			{isAlteredStatus && (
-				<div className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
-					<AlertTriangleIcon className="size-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+				<div className="flex items-start gap-2.5 border-b border-amber-500/20 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-900 dark:text-amber-200">
+					<AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
 					<div className="leading-relaxed">
 						<span className="font-semibold text-amber-950 dark:text-amber-100">
 							Playground Notice ({status} {status === 422 ? "Unprocessable Entity" : "Bad Request"}):
