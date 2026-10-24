@@ -127,7 +127,7 @@
 				"tags": ["Cards"],
 				"summary": "Direct Pay",
 				"operationId": "cardsDirectPay",
-				"description": "This is a single transaction to authorize payment and transfer funds from payer's account to merchant\u2019s account.",
+				"description": "This is a single transaction to authorize payment and transfer funds from payer's account to merchant's account.",
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -753,19 +753,19 @@
 					},
 					"pp_IsRegisteredCustomer": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"description": "This parameter can be accessible from `2.0` version. It represents that the request has been made by the registered or a guest customer of a merchant.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
 					"pp_ShouldTokenizeCardNumber": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It will generate token against the given card details.",
+						"description": "This parameter can be accessible from `2.0` version. It will generate token against the given card details.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
@@ -797,12 +797,12 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20221125153215"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20221202153215"]
 					},
 					"pp_BillReference": {
@@ -822,7 +822,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "Represent the usage mode that is API:Initiate Authentication From API PR:Initiate Authentication From PR (Page Redirection Or Landing Page)",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_SecureHash": {
@@ -831,7 +832,24 @@
 						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Version",
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_TxnExpiryDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_CustomerCardNumber",
+					"pp_UsageMode",
+					"pp_SecureHash"
+				]
 			},
 			"CardsInitiateAuthViaTokenRequest": {
 				"type": "object",
@@ -845,19 +863,19 @@
 					},
 					"pp_IsRegisteredCustomer": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It represents that the request has been made by the registered or a guest customer of a merchant.",
+						"description": "This parameter can be accessible from `2.0` version. It represents that the request has been made by the registered or a guest customer of a merchant.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
 					"pp_ShouldTokenizeCardNumber": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It will generate token against the given card details.",
+						"description": "This parameter can be accessible from `2.0` version. It will generate token against the given card details.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
@@ -889,12 +907,12 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20221125153215"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20221202153215"]
 					},
 					"pp_BillReference": {
@@ -914,7 +932,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "Represent the usage mode that is API:Initiate Authentication With Token From API PR:Initiate Authentication With Token From PR (Page Redirection Or Landing Page)",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_SecureHash": {
@@ -923,7 +942,24 @@
 						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Version",
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_TxnExpiryDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_TokenizedCardNumber",
+					"pp_UsageMode",
+					"pp_SecureHash"
+				]
 			},
 			"CardsInitiateAuthResponse": {
 				"type": "object",
@@ -946,11 +982,11 @@
 					},
 					"html": {
 						"type": "string",
-						"examples": ["<div id=\\\"threedsFrictionLessRedirect\\\" xmlns=\\\"http://www.w3.org/1999/html\\\">"]
+						"examples": ["<div id=\"threedsFrictionLessRedirect\" xmlns=\"http://www.w3.org/1999/html\">"]
 					},
 					"http": {
 						"type": "string",
-						"examples": ["//localhost/MerchantSimulator/merchant/testview\\"]
+						"examples": ["//localhost/MerchantSimulator/merchant/testview"]
 					},
 					"secureHash": {
 						"type": "string",
@@ -971,7 +1007,7 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
@@ -982,7 +1018,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Unique code assigned to each Merchant by PG.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_Password": {
@@ -1052,7 +1088,7 @@
 					},
 					"pp_CustomerCardExpiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": ["12/22"]
 					},
 					"pp_CustomerCardCvv": {
@@ -1067,7 +1103,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "Authenticate Payer via API or PR",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_IsRegisteredCustomer": {
@@ -1078,7 +1115,7 @@
 					},
 					"pp_ShouldTokenizeCardNumber": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.",
+						"description": "This parameter can be accessible from `2.0` version. It represents that the request should have tokenize card number.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
@@ -1088,7 +1125,32 @@
 						"examples": ["true"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Version",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_3DS2ReturnURL",
+					"pp_browser",
+					"pp_3DSecureChallengeWindowSize",
+					"pp_acceptHeaders",
+					"pp_colorDepth",
+					"pp_javaEnabled",
+					"pp_language",
+					"pp_screenHeight",
+					"pp_screenWidth",
+					"pp_timeZone",
+					"pp_CustomerCardNumber",
+					"pp_CustomerCardExpiry",
+					"pp_CustomerCardCvv",
+					"pp_SecureHash",
+					"pp_UsageMode",
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_JavaScriptEnabled"
+				]
 			},
 			"CardsAuthenticatePayerViaTokenRequest": {
 				"type": "object",
@@ -1102,7 +1164,7 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
@@ -1113,7 +1175,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Unique code assigned to each Merchant by PG.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_Password": {
@@ -1182,7 +1244,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "API OR PR",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_IsRegisteredCustomer": {
@@ -1193,7 +1256,7 @@
 					},
 					"pp_ShouldTokenizeCardNumber": {
 						"type": "string",
-						"description": "This parameter can be accessible from 2.0 version. It represents that the request should have tokenize card number.",
+						"description": "This parameter can be accessible from `2.0` version. It represents that the request should have tokenize card number.",
 						"enum": ["Yes", "No"],
 						"examples": ["Yes"]
 					},
@@ -1208,7 +1271,30 @@
 						"examples": ["9228924639592086"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Version",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_3DS2ReturnURL",
+					"pp_browser",
+					"pp_3DSecureChallengeWindowSize",
+					"pp_acceptHeaders",
+					"pp_colorDepth",
+					"pp_javaEnabled",
+					"pp_language",
+					"pp_screenHeight",
+					"pp_screenWidth",
+					"pp_timeZone",
+					"pp_SecureHash",
+					"pp_UsageMode",
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_JavaScriptEnabled",
+					"pp_TokenizedCardNumber"
+				]
 			},
 			"CardsAuthenticatePayerResponse": {
 				"type": "object",
@@ -1232,7 +1318,7 @@
 					"html": {
 						"type": "string",
 						"examples": [
-							"<div id=\\\"threedsFrictionLessRedirect\\\" xmlns=\\\"http://www.w3.org/1999/html\\\">\n    <iframe id=\\\"challengeFrame\\\" name=\\\"challengeFrame\\\"> </iframe>\n    <form id=\\\"threedsFrictionLessRedirectForm\\\" method=\\\"POST\\\"\n          action=\\\"http://localhost/MerchantSimulator/merchant/testview\\\"\n          target=\\\"challengeFrame\\\">\n        <input type=\\\"hidden\\\" name=\\\"order.id\\\" value=\\\"RAFAYKHAN7T20221127183304\\\" />\n        <input type=\\\"hidden\\\" name=\\\"transaction.id\\\" value=\\\"221127664007\\\" />\n        <input type=\\\"hidden\\\" name=\\\"response.gatewayRecommendation\\\" value=\\\"PROCEED\\\" />\n        <input type=\\\"hidden\\\" name=\\\"result\\\" value=\\\"SUCCESS\\\" />\n    </form>\n    <script id=\\\"authenticate-payer-script\\\">\n        var e = document.getElementById(\\\"threedsFrictionLessRedirectForm\\\");\n        if (e) {\n            e.submit(); if (e.parentNode !== null) { e.parentNode.removeChild(e); }\n        }\n    </script>\n</div>"
+							"<div id=\"threedsFrictionLessRedirect\" xmlns=\"http://www.w3.org/1999/html\">\n    <iframe id=\"challengeFrame\" name=\"challengeFrame\"> </iframe>\n    <form id=\"threedsFrictionLessRedirectForm\" method=\"POST\"\n          action=\"http://localhost/MerchantSimulator/merchant/testview\"\n          target=\"challengeFrame\">\n        <input type=\"hidden\" name=\"order.id\" value=\"RAFAYKHAN7T20221127183304\" />\n        <input type=\"hidden\" name=\"transaction.id\" value=\"221127664007\" />\n        <input type=\"hidden\" name=\"response.gatewayRecommendation\" value=\"PROCEED\" />\n        <input type=\"hidden\" name=\"result\" value=\"SUCCESS\" />\n    </form>\n    <script id=\"authenticate-payer-script\">\n        var e = document.getElementById(\"threedsFrictionLessRedirectForm\");\n        if (e) {\n            e.submit(); if (e.parentNode !== null) { e.parentNode.removeChild(e); }\n        }\n    </script>\n</div>"
 						]
 					},
 					"secureHash": {
@@ -1281,7 +1367,7 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode",
 						"enum": ["MPAY"],
 						"examples": ["MPAY"]
 					},
@@ -1292,7 +1378,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Unique merchant code assigned to each Merchant by PG.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_Password": {
@@ -1313,12 +1399,12 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20221110140406"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20221117140406"]
 					},
 					"pp_BillReference": {
@@ -1342,7 +1428,7 @@
 					},
 					"pp_CustomerCardExpiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": ["12/22"]
 					},
 					"pp_SecureHash": {
@@ -1353,7 +1439,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "The discounted amount merchant wants to send. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_DiscountBank": {
 						"type": "string",
@@ -1362,7 +1448,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "API OR PR",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_CustomerCardCvv": {
@@ -1371,7 +1458,32 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_CustomerID",
+					"pp_CustomerEmail",
+					"pp_CustomerMobile",
+					"pp_Version",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_TxnExpiryDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_CustomerCardNumber",
+					"pp_CustomerCardCVV",
+					"pp_CustomerCardExpiry",
+					"pp_SecureHash",
+					"pp_DiscountedAmount",
+					"pp_DiscountBank",
+					"pp_UsageMode",
+					"pp_CustomerCardCvv"
+				]
 			},
 			"CardsDirectPayViaTokenRequest": {
 				"type": "object",
@@ -1406,7 +1518,7 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode",
 						"enum": ["MPAY"],
 						"examples": ["MPAY"]
 					},
@@ -1417,7 +1529,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Unique merchant code assigned to each Merchant by PG.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["Merc0003"]
 					},
 					"pp_Password": {
@@ -1438,12 +1550,12 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20190403093750"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20190403093747"]
 					},
 					"pp_BillReference": {
@@ -1453,8 +1565,8 @@
 					},
 					"pp_Description": {
 						"type": "string",
-						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\"{} are inserted, they will be replaced with a space. Pipe \u2018\\",
-						"examples": ["Description of pay transaction"]
+						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
+						"examples": ["Description of transaction"]
 					},
 					"pp_TokenizedCardNumber": {
 						"type": "string",
@@ -1478,7 +1590,27 @@
 						"examples": ["2.0"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_CustomerID",
+					"pp_CustomerEmail",
+					"pp_CustomerMobile",
+					"pp_TxnType",
+					"pp_TxnRefNo",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_TxnExpiryDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_TokenizedCardNumber",
+					"pp_CustomerCardCvv",
+					"pp_SecureHash",
+					"pp_Version"
+				]
 			},
 			"CardsDirectPayResponse": {
 				"type": "object",
@@ -1512,7 +1644,7 @@
 					},
 					"pp_Frequency": {
 						"type": "string",
-						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"description": "Indicates the frequency of the transaction offered to the payer.\n\n`\"SINGLE\"`: Indicates a single transaction where a single payment is used to complete the order \n\n`\"RECURRING\"`: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
 						"enum": ["SINGLE", "RECURRING"],
 						"examples": ["SINGLE"]
 					},
@@ -1539,7 +1671,7 @@
 					},
 					"pp_CustomerCardExpiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": ["0120"]
 					},
 					"pp_CustomerCardCvv": {
@@ -1599,7 +1731,26 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_InstrumentType",
+					"pp_Frequency",
+					"pp_TxnRefNo",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_CustomerCardNumber",
+					"pp_CustomerCardExpiry",
+					"pp_CustomerCardCvv",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_CustomerID",
+					"pp_CustomerEmail",
+					"pp_CustomerMobile",
+					"pp_IsRegisteredCustomer",
+					"pp_ShouldTokenizeCardNumber",
+					"pp_3DSecureID",
+					"pp_SecureHash",
+					"pp_3dSecureID"
+				]
 			},
 			"CardsAuthorizeViaTokenRequest": {
 				"type": "object",
@@ -1612,7 +1763,7 @@
 					},
 					"pp_Frequency": {
 						"type": "string",
-						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"description": "Indicates the frequency of the transaction offered to the payer.\n\n`\"SINGLE\"`: Indicates a single transaction where a single payment is used to complete the order \n\n`\"RECURRING\"`: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
 						"enum": ["SINGLE", "RECURRING"],
 						"examples": ["SINGLE"]
 					},
@@ -1679,7 +1830,7 @@
 					},
 					"pp_CustomerCardExpiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": [""]
 					},
 					"pp_CustomerCardCvv": {
@@ -1688,7 +1839,25 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_InstrumentType",
+					"pp_Frequency",
+					"pp_IsRegisteredCustomer",
+					"pp_TxnRefNo",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TokenizedCardNumber",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_CustomerID",
+					"pp_CustomerEmail",
+					"pp_CustomerMobile",
+					"pp_3DSecureID",
+					"pp_SecureHash",
+					"pp_CustomerCardNumber",
+					"pp_CustomerCardExpiry",
+					"pp_CustomerCardCvv"
+				]
 			},
 			"CardsAuthorizeResponse": {
 				"type": "object",
@@ -1715,7 +1884,7 @@
 					},
 					"pp_CustomerCardExpiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": ["0120"]
 					},
 					"pp_CustomerID": {
@@ -1778,7 +1947,7 @@
 					},
 					"pp_Frequency": {
 						"type": "string",
-						"description": "Indicates the frequency of the transaction offered to the payer. Value could be any one of the following, based on the usage: SINGLE: Indicates a single transaction where a single payment is used to complete the order. RECURRING: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
+						"description": "Indicates the frequency of the transaction offered to the payer.\n\n`\"SINGLE\"`: Indicates a single transaction where a single payment is used to complete the order \n\n`\"RECURRING\"`: Indicates a recurring transaction where the payer authorizes you to automatically debit their accounts for bill or invoice payments.",
 						"enum": ["SINGLE", "RECURRING"],
 						"examples": ["SINGLE"]
 					},
@@ -1848,7 +2017,7 @@
 						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": ["pp_TxnRefNo", "pp_Amount", "pp_TxnCurrency", "pp_MerchantID", "pp_Password", "pp_3DSecureID", "pp_SecureHash"]
 			},
 			"CardsCaptureResponse": {
 				"type": "object",
@@ -1955,7 +2124,7 @@
 					},
 					"settlementDate": {
 						"type": "string",
-						"description": "A date supplied by the Payment Gateway to indicate when this transaction will be settled. When the Payment Gateway closes the batch at the end of the day, the date will roll over to the next processing day\u2019s date. This date will only be provided in case a transaction is already confirmed by the merchant.",
+						"description": "A date supplied by the Payment Gateway to indicate when this transaction will be settled. When the Payment Gateway closes the batch at the end of the day, the date will roll over to the next processing day’s date. This date will only be provided in case a transaction is already confirmed by the merchant.",
 						"examples": [""]
 					},
 					"settlementExpiryDate": {
@@ -1975,7 +2144,7 @@
 					},
 					"productID": {
 						"type": "string",
-						"description": "This field will only be used in case of Direct Debit transaction type. Product ID of bank through which payment has been performed. e.g. Retail, Corporate. Fixed values: \u2018RETL\u2019, \u2018CORP\u2019. In case value was provided at the time of request, this field will contain the same value. Otherwise, ID of the product chosen by customer at Payment Gateway will be filled.",
+						"description": "This field will only be used in case of Direct Debit transaction type. Product ID of bank through which payment has been performed. e.g. Retail, Corporate. Fixed values: ‘RETL’, ‘CORP’. In case value was provided at the time of request, this field will contain the same value. Otherwise, ID of the product chosen by customer at Payment Gateway will be filled.",
 						"examples": [""]
 					}
 				}
@@ -2028,7 +2197,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "Discounted Amount (Final amount after discount). Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_TxnCurrency": {
 						"type": "string",
@@ -2038,8 +2207,8 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
-						"examples": ["20261007 123456"]
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
+						"examples": ["20261007123456"]
 					},
 					"pp_BillReference": {
 						"type": "string",
@@ -2049,7 +2218,7 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": [""]
+						"examples": ["Description of transaction"]
 					},
 					"pp_SecureHash": {
 						"type": "string",
@@ -2084,17 +2253,35 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": [""]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_Language",
+					"pp_MerchantID",
+					"pp_SubMerchantID",
+					"pp_Password",
+					"pp_TxnRefNo",
+					"pp_MobileNumber",
+					"pp_CNIC",
+					"pp_Amount",
+					"pp_DiscountedAmount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_SecureHash",
+					"pp_Version",
+					"pp_TxnType",
+					"pp_TxnExpiryDateTime"
+				]
 			},
 			"MobileWalletV1Response": {
 				"type": "object",
@@ -2118,6 +2305,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_ResponseCode": {
@@ -2142,7 +2330,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"examples": ["20261007 123456"]
+						"examples": ["20261007123456"]
 					},
 					"pp_TxnRefNo": {
 						"type": "string",
@@ -2158,7 +2346,7 @@
 					},
 					"pp_DiscountedAmount": {
 						"type": "string",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"ppmpf_1": {
 						"type": "string",
@@ -2232,7 +2420,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "Amount in minor units",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_TxnCurrency": {
 						"type": "string",
@@ -2242,8 +2430,8 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
-						"examples": ["20261007 123456"]
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
+						"examples": ["20261007123456"]
 					},
 					"pp_BillReference": {
 						"type": "string",
@@ -2253,7 +2441,7 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": ["Payment Description"]
+						"examples": ["Description of transaction"]
 					},
 					"pp_SecureHash": {
 						"type": "string",
@@ -2282,13 +2470,13 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": [""]
 					},
 					"pp_Version": {
@@ -2298,7 +2486,25 @@
 						"examples": ["1.1"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_Language",
+					"pp_MerchantID",
+					"pp_SubMerchantID",
+					"pp_Password",
+					"pp_TxnRefNo",
+					"pp_MobileNumber",
+					"pp_CNIC",
+					"pp_Amount",
+					"pp_DiscountedAmount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_SecureHash",
+					"pp_TxnType",
+					"pp_TxnExpiryDateTime",
+					"pp_Version"
+				]
 			},
 			"MobileWalletV2CNICResponse": {
 				"type": "object",
@@ -2324,6 +2530,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_ResponseCode": {
@@ -2350,7 +2557,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"examples": ["20261007 123456"]
+						"examples": ["20261007123456"]
 					},
 					"pp_TxnRefNo": {
 						"type": "string",
@@ -2367,7 +2574,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "Amount in minor units",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"ppmpf_1": {
 						"type": "string",
@@ -2442,11 +2649,11 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20210830104840"]
 					},
 					"pp_BillReference": {
@@ -2457,11 +2664,11 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": ["payment description"]
+						"examples": ["Description of transaction"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20210930104840"]
 					},
 					"pp_SecureHash": {
@@ -2471,7 +2678,8 @@
 					},
 					"pp_UsageMode": {
 						"type": "string",
-						"description": "Specifies the usage mode of API calling.",
+						"description": "Represent the usage mode.\n\n`\"API\"`: Initiate Authentication From API \n\n`\"PR\"`: Initiate Authentication From Page Redirection",
+						"enum": ["API", "PR"],
 						"examples": ["API"]
 					},
 					"pp_TxnCurrency": {
@@ -2487,7 +2695,25 @@
 						"examples": ["1.1"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_MerchantID",
+					"pp_SubMerchantID",
+					"pp_Password",
+					"pp_TxnRefNo",
+					"pp_MobileNumber",
+					"pp_CNIC",
+					"pp_MPIN",
+					"pp_Amount",
+					"pp_DiscountedAmount",
+					"pp_TxnDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_TxnExpiryDateTime",
+					"pp_SecureHash",
+					"pp_UsageMode",
+					"pp_TxnCurrency",
+					"pp_Version"
+				]
 			},
 			"MobileWalletV3MPINResponse": {
 				"type": "object",
@@ -2520,7 +2746,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20210830104840"]
 					},
 					"pp_RetrievalReferenceNo": {
@@ -2541,7 +2767,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_AuthCode": {
 						"type": "string",
@@ -2592,7 +2818,7 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": ["payment description"]
+						"examples": ["Description of transaction"]
 					},
 					"pp_TxnCurrency": {
 						"type": "string",
@@ -2602,18 +2828,18 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20211112181543"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20211113181543"]
 					},
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"ppmpf_1": {
 						"type": "string",
@@ -2646,7 +2872,20 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_PaymentToken",
+					"pp_TxnRefNo",
+					"pp_Amount",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_TxnExpiryDateTime",
+					"pp_DiscountedAmount",
+					"pp_SecureHash"
+				]
 			},
 			"MobileWalletV4RecurringResponse": {
 				"type": "object",
@@ -2684,7 +2923,7 @@
 					"pp_DiscountedAmount": {
 						"type": "string",
 						"description": "The transaction amount. Please note that no decimal places are included. Decimal place will be assumed at the default position of the currency provided. Amount in minor units / paisas without decimal point.",
-						"examples": ["0"]
+						"examples": [""]
 					},
 					"pp_SecureHash": {
 						"type": "string",
@@ -2761,7 +3000,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20170517101549"]
 					},
 					"pp_BillReference": {
@@ -2772,11 +3011,11 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": ["Description"]
+						"examples": ["Description of transaction"]
 					},
 					"pp_TxnExpiryDateTime": {
 						"type": "string",
-						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period. Please note that the default and maximum value of this expiry is 3 months.",
+						"description": "Transaction Expiry can be specified by merchant to indicate to the issuing bank that the transaction must be approved within this period.\n\nPlease note that the default and maximum value of this expiry is 3 months.",
 						"examples": ["20170824101549"]
 					},
 					"pp_ReturnURL": {
@@ -2810,7 +3049,25 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_Version",
+					"pp_TxnType",
+					"pp_Language",
+					"pp_MerchantID",
+					"pp_SubMerchantID",
+					"pp_Password",
+					"pp_BankID",
+					"pp_ProductID",
+					"pp_TxnRefNo",
+					"pp_Amount",
+					"pp_TxnCurrency",
+					"pp_TxnDateTime",
+					"pp_BillReference",
+					"pp_Description",
+					"pp_TxnExpiryDateTime",
+					"pp_ReturnURL",
+					"pp_SecureHash"
+				]
 			},
 			"VoucherPaymentResponse": {
 				"type": "object",
@@ -2839,6 +3096,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["RafayKhan7"]
 					},
 					"pp_ResponseCode": {
@@ -2865,7 +3123,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"examples": ["20261007 123456"]
+						"examples": ["20261007123456"]
 					},
 					"pp_TxnRefNo": {
 						"type": "string",
@@ -2877,7 +3135,7 @@
 					},
 					"pp_TxnType": {
 						"type": "string",
-						"description": "Presents the transaction type: `\"MPAY\"` (Direct Pay Mode) or `\"AUTH\"` (Authorize/Capture Mode)",
+						"description": "Presents the transaction type.\n\n`\"MPAY\"`: Direct Pay Mode \n\n`\"AUTH\"`: Authorize/Capture Mode",
 						"enum": ["MPAY", "AUTH"],
 						"examples": ["MPAY"]
 					},
@@ -2957,7 +3215,7 @@
 						"examples": ["7AC1F74C9FEBFDBAB1BCABC4B5E19A6DAEE5A7BE2AD067FE0C729B44061AC9FC"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": ["pp_MerchantID", "pp_Password", "pp_Voucher", "pp_SecureHash"]
 			},
 			"VoucherExpireResponse": {
 				"type": "object",
@@ -3049,7 +3307,7 @@
 					},
 					"pp_TxnDateTime": {
 						"type": "string",
-						"description": "Merchant provided date and time of transaction. The format of date time should be yyyyMMddHHmmss.",
+						"description": "Merchant provided date and time of transaction. \n\nFormat: `yyyyMMddHHmmss`",
 						"examples": ["20220217103423"]
 					},
 					"pp_SecureHash": {
@@ -3058,7 +3316,20 @@
 						"examples": ["a94e1cf4e0ad9d2e9c6987531db52eb508f0d1d9576b499469b16dd41b8bf894"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_MerchantID",
+					"pp_SubMerchantID",
+					"pp_Password",
+					"pp_BankID",
+					"pp_TxnRefNo",
+					"pp_Amount",
+					"pp_CNIC",
+					"pp_AccountNo",
+					"pp_MobileNumber",
+					"pp_EmailAddress",
+					"pp_TxnDateTime",
+					"pp_SecureHash"
+				]
 			},
 			"BankValidateCustomerResponse": {
 				"type": "object",
@@ -3122,7 +3393,7 @@
 					"pp_Description": {
 						"type": "string",
 						"description": "Transaction details to be shown on screen as desired by the merchant. This field will be parsed to identify any malicious data entered by the end user. In cases when any of these characters <>\\*=%/:'\\",
-						"examples": ["Description"]
+						"examples": ["Description of transaction"]
 					},
 					"ppmpf_1": {
 						"type": "string",
@@ -3161,7 +3432,17 @@
 						"examples": [""]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_TxnRefNo", "pp_SecureHash"]
+				"required": [
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_TxnRefNo",
+					"pp_OTP",
+					"pp_BillReference",
+					"pp_Currency",
+					"pp_Description",
+					"pp_SecureHash",
+					"pp_TxnCurrency"
+				]
 			},
 			"BankAccountPaymentResponse": {
 				"type": "object",
@@ -3281,7 +3562,7 @@
 						"examples": ["70524E8D609D14F2D9DF6DB4887A36EA0D4A247B0EB4B3E85730FCD4D9C74503"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": ["pp_TxnRefNo", "pp_Amount", "pp_TxnCurrency", "pp_MerchantID", "pp_Password", "pp_MerchantMPIN", "pp_SecureHash"]
 			},
 			"RefundMobileAccountResponse": {
 				"type": "object",
@@ -3294,10 +3575,12 @@
 					},
 					"pp_ResponseCode": {
 						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
 						"examples": ["000"]
 					},
 					"pp_ResponseMessage": {
 						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
 						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
 					}
 				}
@@ -3338,7 +3621,7 @@
 						"examples": ["F1CB6FE2F69A5B86C63B49F309AC37BBC40FE6A5394CED7147C6876820F6A1AF"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": ["pp_TxnRefNo", "pp_Amount", "pp_TxnCurrency", "pp_MerchantID", "pp_Password", "pp_SecureHash"]
 			},
 			"RefundCardResponse": {
 				"type": "object",
@@ -3351,10 +3634,12 @@
 					},
 					"pp_ResponseCode": {
 						"type": "string",
+						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
 						"examples": ["000"]
 					},
 					"pp_ResponseMessage": {
 						"type": "string",
+						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
 						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
 					}
 				}
@@ -3404,31 +3689,32 @@
 						"examples": ["PKR"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash", "pp_TxnCurrency"]
+				"required": [
+					"pp_VoucherID",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_CNIC",
+					"pp_Currency",
+					"pp_Amount",
+					"pp_SecureHash",
+					"pp_TxnCurrency"
+				]
 			},
 			"RefundVoucherResponse": {
 				"type": "object",
 				"title": "Voucher Refund Response",
 				"properties": {
-					"pp_ResponseCode": {
-						"type": "string",
-						"examples": ["000"]
-					},
-					"pp_ResponseMessage": {
-						"type": "string",
-						"examples": ["The requested operation has been performed successfully."]
-					},
 					"pp_SecureHash": {
 						"type": "string",
 						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
-						"examples": ["0E8803FDD5C918F31C8ED3171EE8C12C26E6903ED20FC459103E56525FB514E9"]
+						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					},
-					"pp_responseCode": {
+					"pp_ResponseCode": {
 						"type": "string",
 						"description": "Response code representing the transaction success or failure. A response code of 000 represents success.",
 						"examples": ["000"]
 					},
-					"pp_responseMessage": {
+					"pp_ResponseMessage": {
 						"type": "string",
 						"description": "Error details in case the transaction failed to be processed. This field will be mandatory for all cases where response code is not equal to 000.",
 						"examples": ["Thank you for Using JazzCash, your transaction was successful."]
@@ -3480,7 +3766,16 @@
 						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Language",
+					"pp_CorrelationId",
+					"pp_IsRegisteredCustomer",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_InstrumentType",
+					"pp_TokenizedCardNumber",
+					"pp_SecureHash"
+				]
 			},
 			"TokenRetrieveResponse": {
 				"type": "object",
@@ -3488,12 +3783,12 @@
 				"properties": {
 					"pp_Brand": {
 						"type": "string",
-						"description": "Type/Brand of user\u2019s card.",
+						"description": "Type/Brand of user’s card.",
 						"examples": ["MASTERCARD"]
 					},
 					"pp_Expiry": {
 						"type": "string",
-						"description": "Expiry date of the card used for making payment. Format: MMYY (Month Month Year Year).",
+						"description": "Expiry date of the card used for making payment.\n\nFormat: `MMYY`",
 						"examples": ["1225"]
 					},
 					"pp_FundingMethod": {
@@ -3503,12 +3798,12 @@
 					},
 					"pp_Issuer": {
 						"type": "string",
-						"description": "Issuer of user\u2019s card.",
+						"description": "Issuer of user’s card.",
 						"examples": ["BANCO DEL PICHINCHA, C.A."]
 					},
 					"pp_LocalBrand": {
 						"type": "string",
-						"description": "Type/Brand of user\u2019s card.",
+						"description": "Type/Brand of user’s card.",
 						"examples": ["MASTERCARD"]
 					},
 					"pp_cardNumber": {
@@ -3620,7 +3915,16 @@
 						"examples": ["d0dfd405bdd1724877d976d31c06cbef7282e2319b47d4cc9602daee44139a09"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Language",
+					"pp_CorrelationId",
+					"pp_IsRegisteredCustomer",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_InstrumentType",
+					"pp_TokenizedCardNumber",
+					"pp_SecureHash"
+				]
 			},
 			"TokenDeleteResponse": {
 				"type": "object",
@@ -3695,6 +3999,7 @@
 					},
 					"pp_MerchantId": {
 						"type": "string",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["MC0484"]
 					},
 					"pp_Password": {
@@ -3713,7 +4018,7 @@
 						"examples": ["RafayKhan7"]
 					}
 				},
-				"required": ["pp_TxnRefNo", "pp_Password", "pp_SecureHash", "pp_MerchantID"]
+				"required": ["pp_Language", "pp_TxnRefNo", "pp_MerchantId", "pp_Password", "pp_SecureHash", "pp_MerchantID"]
 			},
 			"TokenInquireResponse": {
 				"type": "object",
@@ -3753,7 +4058,7 @@
 					},
 					"pp_CorrelationId": {
 						"type": "string",
-						"description": "It\u2019s a Unique Identifier. It can be alphanumeric and should not be greater than 40",
+						"description": "It’s a Unique Identifier. It can be alphanumeric and should not be greater than 40",
 						"examples": ["abcosiufgjss18"]
 					},
 					"pp_IsRegisteredCustomer": {
@@ -3763,7 +4068,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Unique Merchant Code assigned to each Merchant by PG.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["TestMerchant"]
 					},
 					"pp_Password": {
@@ -3789,7 +4094,17 @@
 						"examples": ["A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6"]
 					}
 				},
-				"required": ["pp_MerchantID", "pp_Password", "pp_SecureHash"]
+				"required": [
+					"pp_Language",
+					"pp_CorrelationId",
+					"pp_IsRegisteredCustomer",
+					"pp_MerchantID",
+					"pp_Password",
+					"pp_InstrumentType",
+					"pp_TokenizedCardNumber",
+					"pp_CustomerCardExpiry",
+					"pp_SecureHash"
+				]
 			},
 			"TokenUpdateResponse": {
 				"type": "object",
@@ -3817,7 +4132,7 @@
 					},
 					"pp_MerchantID": {
 						"type": "string",
-						"description": "Used to allow the Payment Gateway to check the integrity of the transaction request.",
+						"description": "Unique Id assigned to each merchant by the payment gateway.",
 						"examples": ["TestMerchant"]
 					},
 					"pp_SecureHash": {

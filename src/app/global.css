@@ -81,3 +81,8 @@ body {
 .fd-step > :first-child {
 	margin-top: 0;
 }
+
+/* Hide Schema toggle in Example Response card header */
+label:has(span[role="switch"]) {
+	display: none !important;
+}
